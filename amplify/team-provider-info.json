@@ -1,0 +1,14 @@
+{
+    "android": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-projectmanagementapp-android-210227-authRole",
+            "UnauthRoleArn": "arn:aws:iam::931542184714:role/amplify-projectmanagementapp-android-210227-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::931542184714:role/amplify-projectmanagementapp-android-210227-authRole",
+            "Region": "eu-west-3",
+            "DeploymentBucketName": "amplify-projectmanagementapp-android-210227-deployment",
+            "UnauthRoleName": "amplify-projectmanagementapp-android-210227-unauthRole",
+            "StackName": "amplify-projectmanagementapp-android-210227",
+            "StackId": "arn:aws:cloudformation:eu-west-3:931542184714:stack/amplify-projectmanagementapp-android-210227/b69d60d0-6f9c-11ea-a969-0e0ddfced2c0"
+        }
+    }
+}
