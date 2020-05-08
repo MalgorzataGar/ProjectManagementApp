@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_mytasks">
+
+    <fragment
+        android:id="@+id/nav_mytasks"
+        android:name="com.example.projectmanagementapp.ui.MyTasks.MyTasksFragment"
+        android:label="@string/menu_mytasks"
+        tools:layout="@layout/fragment_mytasks">
+    </fragment>
+    <fragment
+        android:id="@+id/nav_addtask"
+        android:name="com.example.projectmanagementapp.ui.AddTask.AddTaskFragment"
+        android:label="@string/menu_addtask"
+        tools:layout="@layout/fragment_addtask" />
+
+    <fragment
+        android:id="@+id/nav_grouptasks"
+        android:name="com.example.projectmanagementapp.ui.GroupTasks.GroupTasksFragment"
+        android:label="@string/menu_grouptasks"
+        tools:layout="@layout/fragment_grouptasks" />
+    <fragment
+        android:id="@+id/nav_addgroup"
+        android:name="com.example.projectmanagementapp.ui.GroupTasks.GroupTasksFragment"
+        android:label="@string/menu_addgroup"
+        tools:layout="@layout/fragment_addgroup" />
+    <fragment
+        android:id="@+id/nav_editgroup"
+        android:name="com.example.projectmanagementapp.ui.EditGroup.EditGroupFragment"
+        android:label="@string/menu_editgroup"
+        tools:layout="@layout/fragment_editgroup" />
+</navigation>
