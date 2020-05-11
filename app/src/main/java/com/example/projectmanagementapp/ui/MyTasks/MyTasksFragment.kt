@@ -4,28 +4,86 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmanagementapp.R
+import com.example.projectmanagementapp.data.model.Task
+import com.example.projectmanagementapp.extensions.ListAdapter
+import com.example.projectmanagementapp.extensions.OnItemClickListener
 
 class MyTasksFragment : Fragment() {
 
     private lateinit var myTasksViewModel: MyTasksViewModel
+    protected lateinit var rootView: View
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapter: ListAdapter
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        myTasksViewModel =
-                ViewModelProviders.of(this).get(MyTasksViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_mytasks, container, false)
-        val textView: TextView = root.findViewById(R.id.text_mytasks)
-        myTasksViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+    companion object {
+        var TAG = MyTasksFragment::class.java.simpleName
+        const val ARG_POSITION: String = "positioin"
+
+        fun newInstance(): MyTasksFragment {
+            var fragment = MyTasksFragment();
+            val args = Bundle()
+            args.putInt(ARG_POSITION, 1)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onCreateComponent()
+    }
+
+    private fun onCreateComponent() {
+        adapter = ListAdapter()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        rootView = inflater.inflate(R.layout.fragment_mytasks, container, false);
+        initView()
+        return rootView
+    }
+
+    private fun initView(){
+        setUpAdapter()
+        initializeRecyclerView()
+        setUpDummyData()
+    }
+
+    private fun setUpAdapter() {
+        adapter.setOnItemClickListener(onItemClickListener = object : OnItemClickListener {
+            override fun onItemClick(position: Int, view: View?) {
+                var task = adapter.getItem(position)
+//                startActivity(context?.let {ctx ->
+//                    task?.let {
+//                            user -> DetailsActivity.newIntent(ctx, user)
+//                    }
+//                })
+            }
         })
-        return root
+    }
+
+    private fun initializeRecyclerView() {
+        recyclerView = rootView.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
+    }
+
+    private fun setUpDummyData(){
+        var list: ArrayList<Task> = ArrayList<Task>()
+        var task1 = Task()
+        task1.Name = "Taks1"
+        var task2 = Task()
+        task2.Name = "Taks2"
+        var task3 = Task()
+        task3.Name = "Taks3"
+        list.add(task1)
+        list.add(task2)
+        list.add(task3)
+        adapter.addItems(list)
     }
 }
