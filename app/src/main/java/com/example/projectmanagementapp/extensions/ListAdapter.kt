@@ -3,6 +3,7 @@ package com.example.projectmanagementapp.extensions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,7 @@ class ListAdapter: BaseRecyclerViewAdapter<Task>() {
 
         fun setUpView(task: Task?) {
             //task?.Name?.let { imageView.setImageResource() }
-            textView.text = task?.Name
+            textView.text = task?.taskName
         }
 
         override fun onClick(v: View?) {
@@ -40,6 +41,6 @@ class ListAdapter: BaseRecyclerViewAdapter<Task>() {
         }
     }
 }
-interface OnItemClickListener {
+interface OnItemClickListener : AdapterView.OnItemClickListener {
     abstract fun onItemClick(position: Int, view: View?)
 }

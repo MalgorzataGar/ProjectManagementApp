@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseRecyclerViewAdapter<T>:  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var list: ArrayList<T>? = ArrayList<T>()
-    protected var itemClickListener: OnItemClickListener? = null
+    protected var itemClickListener: AdapterView.OnItemClickListener? = null
 
     fun addItems(items: ArrayList<T>) {
         this.list?.addAll(items)

@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.TextView
+
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
-import com.example.projectmanagementapp.extensions.ListAdapter
 import com.example.projectmanagementapp.extensions.OnItemClickListener
 
 class MyTasksFragment : Fragment() {
@@ -19,7 +18,7 @@ class MyTasksFragment : Fragment() {
     private lateinit var myTasksViewModel: MyTasksViewModel
     protected lateinit var rootView: View
     lateinit var recyclerView: RecyclerView
-    lateinit var adapter: ListAdapter
+    lateinit var adapter: com.example.projectmanagementapp.extensions.ListAdapter
 
     companion object {
         var TAG = MyTasksFragment::class.java.simpleName
@@ -39,7 +38,7 @@ class MyTasksFragment : Fragment() {
     }
 
     private fun onCreateComponent() {
-        adapter = ListAdapter()
+        adapter = com.example.projectmanagementapp.extensions.ListAdapter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,6 +63,15 @@ class MyTasksFragment : Fragment() {
 //                    }
 //                })
             }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                TODO("Not yet implemented")
+            }
         })
     }
 
@@ -76,11 +84,11 @@ class MyTasksFragment : Fragment() {
     private fun setUpDummyData(){
         var list: ArrayList<Task> = ArrayList<Task>()
         var task1 = Task()
-        task1.Name = "Taks1"
+        task1.taskName = "Taks1"
         var task2 = Task()
-        task2.Name = "Taks2"
+        task2.taskName = "Taks2"
         var task3 = Task()
-        task3.Name = "Taks3"
+        task3.taskName = "Taks3"
         list.add(task1)
         list.add(task2)
         list.add(task3)
