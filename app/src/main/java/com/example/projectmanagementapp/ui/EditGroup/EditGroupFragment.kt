@@ -21,9 +21,7 @@ class EditGroupFragment : Fragment(){
         editGroupViewModel =
             ViewModelProviders.of(this).get(EditGroupViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        val textView: TextView = root.findViewById(R.id.text_addtask)
         editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
         })
         return root
     }

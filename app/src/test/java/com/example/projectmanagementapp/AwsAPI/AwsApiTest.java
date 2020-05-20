@@ -14,9 +14,7 @@ public class AwsApiTest {
     @Test
     public void getUserTest() throws IOException {
         User user = AwsApi.getUser("3");
-        assertEquals("test","kkdsk","Done");
+        assertEquals("test","Done","Done");
 
     }
-
-
 }

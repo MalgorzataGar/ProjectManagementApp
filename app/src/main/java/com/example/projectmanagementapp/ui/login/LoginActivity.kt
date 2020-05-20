@@ -13,10 +13,12 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.projectmanagementapp.MainActivity
 import com.example.projectmanagementapp.R
+import com.example.projectmanagementapp.extensions.UserProvider
 
 
 class LoginActivity : AppCompatActivity() {
@@ -59,7 +61,14 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                //(this.application as UserProvider).setUserName(loginResult.success.displayName)
+                //TODO(add proper user id)
+                //(this.application as UserProvider).setUserId("1")
                 val i = Intent(this, MainActivity::class.java)
+                val bundle = bundleOf(
+                    "user" to loginResult.success.displayName
+                )
+                i.putExtras(bundle)
                 startActivity(i)
             }
             setResult(Activity.RESULT_OK)

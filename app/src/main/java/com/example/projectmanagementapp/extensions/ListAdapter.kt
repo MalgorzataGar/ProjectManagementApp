@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmanagementapp.R
@@ -24,7 +25,8 @@ class ListAdapter: BaseRecyclerViewAdapter<Task>() {
 
     inner class MyViewHolder (view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private val imageView: ImageView = view.image_view
+        private val stateImageView: ImageView = view.image_state
+        private val priorityImageView: ImageView = view.image_priority
         private val textView: TextView = view.text_view
 
         init {
@@ -32,15 +34,31 @@ class ListAdapter: BaseRecyclerViewAdapter<Task>() {
         }
 
         fun setUpView(task: Task?) {
-            //task?.Name?.let { imageView.setImageResource() }
             textView.text = task?.taskName
+            if (task != null) {
+                priorityImageView.setImageResource(GetPriorityIcon(task.priority))
+                stateImageView.setImageResource(GetStateIcon(task.state))
+            }
+        }
+
+        private fun GetStateIcon(state: String?): Int {
+            if(state == "todo")  return R.drawable.todo
+            else if(state == "inprogress") return R.drawable.inprogress
+            else if(state == "done") return R.drawable.done
+            else return 0
+        }
+        private fun GetPriorityIcon(priority: String?): Int {
+            if(priority == "minor") return R.drawable.minor
+            else if(priority == "normal") return R.drawable.normal
+            else if(priority == "major") return R.drawable.major
+            else return 0
         }
 
         override fun onClick(v: View?) {
-            //itemClickListener?.onItemClick(adapterPosition, v)
+            itemClickListener?.onItemClick(adapterPosition, v)
         }
     }
 }
-interface OnItemClickListener : AdapterView.OnItemClickListener {
-    abstract fun onItemClick(position: Int, view: View?)
-}
+
+
+

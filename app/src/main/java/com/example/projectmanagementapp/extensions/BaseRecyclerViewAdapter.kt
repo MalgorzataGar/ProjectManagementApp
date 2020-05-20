@@ -2,13 +2,14 @@ package com.example.projectmanagementapp.extensions
 
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseRecyclerViewAdapter<T>:  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var list: ArrayList<T>? = ArrayList<T>()
-    protected var itemClickListener: AdapterView.OnItemClickListener? = null
+    protected var itemClickListener: OnItemClickListener? = null
 
     fun addItems(items: ArrayList<T>) {
         this.list?.addAll(items)
@@ -33,4 +34,7 @@ abstract class BaseRecyclerViewAdapter<T>:  RecyclerView.Adapter<RecyclerView.Vi
     private fun reload() {
         Handler(Looper.getMainLooper()).post { notifyDataSetChanged() }
     }
+}
+interface OnItemClickListener  {
+    abstract fun onItemClick(position: Int, view: View?)
 }

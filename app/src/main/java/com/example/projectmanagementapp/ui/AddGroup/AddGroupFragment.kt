@@ -4,26 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.projectmanagementapp.R
+import com.example.projectmanagementapp.ui.AddGroup.AddGroupViewModel
 
 class AddGroupFragment : Fragment(){
-    private lateinit var editGroupViewModel: EditGroupViewModel
+    private lateinit var addGroupViewModel: AddGroupViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        editGroupViewModel =
-            ViewModelProviders.of(this).get(EditGroupViewModel::class.java)
+        addGroupViewModel =
+            ViewModelProviders.of(this).get(AddGroupViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        val textView: TextView = root.findViewById(R.id.text_addtask)
-        editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+
+        addGroupViewModel.text.observe(viewLifecycleOwner, Observer {
+
         })
         return root
     }

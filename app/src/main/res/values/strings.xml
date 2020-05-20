@@ -12,8 +12,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -22,4 +21,11 @@
     <string name="menu_addtask">Add Task</string>
     <string name="menu_addgroup">Add Group</string>
     <string name="menu_editgroup">Edit Group</string>
+    <string name="menu_task">Task Details</string>
+
+    <string-array name="priorityList">
+        <item>minor</item>
+        <item>normal</item>
+        <item>major</item>
+    </string-array>
 </resources>

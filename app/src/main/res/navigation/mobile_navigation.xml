@@ -10,6 +10,13 @@
         android:name="com.example.projectmanagementapp.ui.MyTasks.MyTasksFragment"
         android:label="@string/menu_mytasks"
         tools:layout="@layout/fragment_mytasks">
+        <action
+            android:id="@+id/action_nav_mytasks_to_nav_task"
+            app:destination="@id/nav_task"
+            app:popUpTo="@id/nav_mytasks" />
+        <action
+            android:id="@+id/action_nav_mytasks_to_nav_addtask"
+            app:destination="@id/nav_addtask" />
     </fragment>
     <fragment
         android:id="@+id/nav_addtask"
@@ -21,7 +28,12 @@
         android:id="@+id/nav_grouptasks"
         android:name="com.example.projectmanagementapp.ui.GroupTasks.GroupTasksFragment"
         android:label="@string/menu_grouptasks"
-        tools:layout="@layout/fragment_grouptasks" />
+        tools:layout="@layout/fragment_grouptasks" >
+        <action
+            android:id="@+id/action_nav_grouptasks_to_nav_task"
+            app:destination="@id/nav_task"
+            app:popUpTo="@id/nav_grouptasks" />
+    </fragment>
     <fragment
         android:id="@+id/nav_addgroup"
         android:name="com.example.projectmanagementapp.ui.GroupTasks.GroupTasksFragment"
@@ -32,4 +44,10 @@
         android:name="com.example.projectmanagementapp.ui.EditGroup.EditGroupFragment"
         android:label="@string/menu_editgroup"
         tools:layout="@layout/fragment_editgroup" />
+    <fragment
+        android:id="@+id/nav_task"
+        android:name="com.example.projectmanagementapp.ui.TaskView.TaskFragment"
+        android:label = "@string/menu_task"
+        tools:layout="@layout/fragment_task">
+    </fragment>
 </navigation>
