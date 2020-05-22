@@ -109,7 +109,7 @@ class GroupTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        adapter.clear()
+        /*adapter.clear()
         //TODO : add user id as global
         val user : User = AwsApi.getUser("1")
         val team : Team = AwsApi.getTeam("1")
@@ -118,6 +118,6 @@ class GroupTasksFragment : Fragment() {
         {
             list.add(AwsApi.getTask(taskId))
         }
-        adapter.addItems(list)
+        adapter.addItems(list)*/
     }
 }

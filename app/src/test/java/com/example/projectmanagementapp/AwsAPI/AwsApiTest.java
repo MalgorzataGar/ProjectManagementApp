@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class AwsApiTest {
     @Test
     public void getUserTest() throws IOException {
-        User user = AwsApi.getUser("3");
+        User user = AwsApi.getUser("1","dasijioasdjijdsaijdsa");
         assertEquals("test","Done","Done");
 
     }
