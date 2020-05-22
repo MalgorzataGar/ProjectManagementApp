@@ -1,28 +1,25 @@
 package com.example.projectmanagementapp.ui.MyTasks
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.core.os.bundleOf
-
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmanagementapp.AwsAPI.AwsApi
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.OnItemClickListener
 import com.example.projectmanagementapp.extensions.loadPreference
 import com.example.projectmanagementapp.ui.TaskView.TaskFragment
-import com.google.android.material.snackbar.Snackbar
 
 class MyTasksFragment : Fragment() {
 
@@ -66,7 +63,9 @@ class MyTasksFragment : Fragment() {
     private fun initView(){
         setUpAdapter()
         initializeRecyclerView()
-        setUpDummyData()
+        //setUpDummyData
+        //TODO add loading screen (eg. spining circle) - to long time to load all tasks
+        getTaskList()
         setAddTaskButton()
     }
 
@@ -131,14 +130,41 @@ class MyTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        /*adapter.clear()
-        //TODO : add user id as global
-        val user : User = AwsApi.getUser("1")
+        val userID = "1" //TODO replace with singleton
+
+        Log.v("MyTaskFragment","Enter getTaskList()")
+        adapter.clear()
+        //user analise
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(userID).get()
+        Log.v("MyTaskFragment",user.toString())
+
         var list: ArrayList<Task> = ArrayList<Task>()
         for (taskId in user.taskIDs)
         {
-           // list.add(AwsApi.getTask(taskId))
+            val task = AwsApisAsyncWrapper.getTaskIDasync().execute("1").get()
+            list.add(task)
+            Log.v("MyTaskFragment",task.toString())
         }
-        adapter.addItems(list)*/
+        Log.v("MyTaskFragment","list of tasks created")
+        adapter.addItems(list)
     }
+
+
+    // async
+    /*private class getUserAsync : AsyncTask<String, Int, User>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg userID: String): User? {
+            Log.v("deb",userID[0])
+            return AwsApi.getUser(userID[0])
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: User?) {
+            //showNotification("Downloaded $result bytes")
+            Log.v("REST_TASK","Got task info from server")
+        }
+
+    }*/
+
 }

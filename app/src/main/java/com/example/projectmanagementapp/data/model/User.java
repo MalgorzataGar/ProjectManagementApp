@@ -44,4 +44,9 @@ public class User {
     public String getPasswordHash() {
         return passwordHash;
     }
+
+    @Override
+    public String toString(){
+        return login+" "+ID+" gropus:"+groupIDs.toString()+" tasks"+taskIDs.toString();
+    }
 }

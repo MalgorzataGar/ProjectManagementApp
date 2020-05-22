@@ -119,7 +119,8 @@ public class AwsApi {
 
     }
 
-    public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
+    public static Task getTask(String id) throws IOException, IllegalStateException{
+    //public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getTask?taskID=%s&userID=%s&passwordHash=%s",id, userID, passwordHash);
             Log.v("REST", address);
@@ -191,8 +192,8 @@ public class AwsApi {
         }
     }
 
-    public static void postOrUpdateTask(Task task) throws JSONException, IOException { //TODO
-    //public static void postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
+    //public static void postOrUpdateTask(Task task) throws JSONException, IOException { //TODO
+    public static void postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -221,8 +222,8 @@ public class AwsApi {
         }
     }
 
-    public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
-    //public static void postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {
+    //public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
+    public static void postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createGroup";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -266,7 +267,7 @@ public class AwsApi {
 
     }
 
-    public static void deleteTask(String id) throws IOException { //TODO
+    public static void deleteTask(String taskID) throws IOException { //TODO
     //public static void deleteTask(String taskID, String userID, String passwordHash) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteTask";
         JsonObject json = new JsonObject();
@@ -286,7 +287,7 @@ public class AwsApi {
 
     }
 
-    public static void deleteGroup(String id) throws IOException { //TODO
+    public static void deleteGroup(String groupID) throws IOException { //TODO
     //public static void deleteGroup(String groupID, String userID, String passwordHash) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteGroup";
         JsonObject json = new JsonObject();
