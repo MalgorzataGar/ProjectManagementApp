@@ -31,14 +31,31 @@ class AwsApisAsyncWrapper {
 
         // Do the long-running work in here
         override fun doInBackground(vararg userID: String): User? {
-            Log.v("deb", userID[0])
+            Log.v("REST_getUser", userID[0])
             return AwsApi.getUser(userID[0])
         }
 
         // This is called when doInBackground() is finished
         override fun onPostExecute(result: User?) {
             //showNotification("Downloaded $result bytes")
-            Log.v("REST_TASK", "Got task info from server")
+            Log.v("REST_getUser", "Got user info from server")
+        }
+
+    }
+    class postOrUpdateTaskAsync: AsyncTask<Pair<Task, Boolean>, Int, Void>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg arg: Pair<Task, Boolean>): Void? {
+            Log.v("REST_postTask",arg[0].toString())
+            Log.v("REST_postTask", arg[0].first.toString())
+            AwsApi.postOrUpdateTask(arg[0].first, arg[0].second)
+            return null
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: Void?) {
+            //showNotification("Downloaded $result bytes")
+            Log.v("REST_postTask", "Got task info from server")
         }
 
     }
