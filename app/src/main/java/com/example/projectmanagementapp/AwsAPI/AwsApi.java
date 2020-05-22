@@ -76,6 +76,23 @@ public class AwsApi {
         }
     }
 
+    public static String login(String login, String passwordHash)throws IOException, IllegalStateException {
+        String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/login?login=%s&passwordHash=%s", login, passwordHash);
+        RequestBody body = RequestBody.create(JSON, "");
+        Request request = new Request.Builder()
+                .url(address)
+                .addHeader("Content-Type", "application/json")
+                .post(body)
+                .build();
+        Response res = getHttpClient().newCall(request).execute();
+        if (res != null) {
+            /*System.out.println(res.body().string());*/
+            return res.body().string();
+        } else {
+            return null;
+        }
+    }
+
     public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s", id,passwordHash);
