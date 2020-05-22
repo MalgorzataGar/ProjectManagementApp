@@ -37,8 +37,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-400" />
-                            <option name="y" value="-85" />
+                            <option name="x" value="-516" />
+                            <option name="y" value="-45" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -53,6 +53,27 @@
                             <option name="y" value="350" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_nav_grouptasks_to_nav_task">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="nav_logout">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="23" />
+                            <option name="y" value="-377" />
+                          </Point>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -61,9 +82,23 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-188" />
-                            <option name="y" value="23" />
+                            <option name="x" value="-348" />
+                            <option name="y" value="-93" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_nav_mytasks_to_nav_addtask">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_nav_mytasks_to_nav_task">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

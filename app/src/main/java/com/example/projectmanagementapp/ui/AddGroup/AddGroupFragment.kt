@@ -22,7 +22,7 @@ class AddGroupFragment : Fragment(){
     ): View? {
         addGroupViewModel =
             ViewModelProviders.of(this).get(AddGroupViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_addtask, container, false)
+        val root = inflater.inflate(R.layout.fragment_addgroup, container, false)
 
         addGroupViewModel.text.observe(viewLifecycleOwner, Observer {
 

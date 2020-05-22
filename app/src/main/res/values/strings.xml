@@ -25,6 +25,20 @@
     <string name="stateButtonStartProgress">Start progress</string>
     <string name="stateButtonFinish">Finish</string>
     <string name="stateButtonClose">Close</string>
+    <string name="Groupname">Group name</string>
+    <string name="Nameedit">name</string>
+    <string name="GroupID">Group ID</string>
+    <string name="groupID">groupID</string>
+    <string name="AdminID">Admin ID</string>
+    <string name="adminID">adminID</string>
+    <string name="Tasks">Tasks</string>
+    <string name="tasksIDs">tasksIDs</string>
+    <string name="UsersRoles">Users &amp; roles</string>
+    <string name="IDsRoles">IDs &amp; roles (format: 1:member;)</string>
+    <string name="Gr">Groups:</string>
+    <string name="Us">Users:</string>
+    <string name="Ts">Tasks:</string>
+    <string name="menu_logout">Logout</string>
 
     <string-array name="priorityList">
         <item>minor</item>
@@ -41,5 +55,9 @@
         <item>todo</item>
         <item>in_progress</item>
         <item>done</item>
+    </string-array>
+
+    <string-array name="groupIDs">
+        <item>New group</item>
     </string-array>
 </resources>
