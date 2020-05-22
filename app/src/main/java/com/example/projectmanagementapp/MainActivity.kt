@@ -3,6 +3,7 @@ package com.example.projectmanagementapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        getSampleRESTRequest() // REST TEST
+
         //val fab: FloatingActionButton = findViewById(R.id.fab)
         //fab.setOnClickListener { view ->
           //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -47,6 +50,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_addgroup,R.id.nav_editgroup), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,5 +65,8 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-
+    fun getSampleRESTRequest(){
+        Log.v("REST","Uruchomienie wezwania API")
+    }
+    // TODO przechowywać hasha hasła i singleton id użytkownika
 }

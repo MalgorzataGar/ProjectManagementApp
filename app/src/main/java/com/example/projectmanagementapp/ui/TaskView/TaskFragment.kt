@@ -1,6 +1,8 @@
 package com.example.projectmanagementapp.ui.TaskView
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
-import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.data.model.User
 
 class TaskFragment : Fragment() {
@@ -72,10 +74,34 @@ class TaskFragment : Fragment() {
 
 
     private fun GetTaskByID(id: String?): Task {
-       // return AwsApi.getTask(id)
-        return Task("2","12.05.2020", listOf("1"),
-            "groupID",id,"important","new","test task","Name")
+        return getTaskIDasync().execute("1").get() //TODO change 1 to id
+        //return Task("2","12.05.2020", listOf("1"),
+        //    "groupID",id,"important","new","test task","Name")
     }
+
+
+    // async
+    private class getTaskIDasync : AsyncTask<String, Int, Task>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg id1: String): Task? {
+            Log.v("deb",id1[0])
+            return AwsApi.getTask(id1[0])
+        }
+
+        // This is called each time you call publishProgress()
+        override fun onProgressUpdate(vararg progress: Int?) {
+            //setProgressPercent(progress.firstOrNull() ?: 0)
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: Task?) {
+            //showNotification("Downloaded $result bytes")
+            Log.v("REST_TASK","Got task info from server")
+        }
+
+    }
+
 
 
 }

@@ -25,5 +25,6 @@ class EditGroupFragment : Fragment(){
         })
         return root
     }
+
 }
 

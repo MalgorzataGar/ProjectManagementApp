@@ -1,5 +1,7 @@
 package com.example.projectmanagementapp.data.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class Task {
@@ -60,5 +62,11 @@ public class Task {
         this.state = state;
         this.taskDescription = taskDescription;
         this.taskName = taskName;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return ID+" "+taskName;
     }
 }
