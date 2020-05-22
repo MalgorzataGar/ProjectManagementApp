@@ -126,7 +126,7 @@ class MyTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        adapter.clear()
+        /*adapter.clear()
         //TODO : add user id as global
         val user : User = AwsApi.getUser("1")
         var list: ArrayList<Task> = ArrayList<Task>()
@@ -134,6 +134,6 @@ class MyTasksFragment : Fragment() {
         {
             list.add(AwsApi.getTask(taskId))
         }
-        adapter.addItems(list)
+        adapter.addItems(list)*/
     }
 }
