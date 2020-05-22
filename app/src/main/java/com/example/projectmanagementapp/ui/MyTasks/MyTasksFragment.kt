@@ -68,7 +68,7 @@ class MyTasksFragment : Fragment() {
         initializeRecyclerView()
         //setUpDummyData
         //TODO add loading screen (eg. spining circle) - to long time to load all tasks
-        getTaskList()
+        getTaskList("")
         setAddTaskButton()
         setFilterListener()
     }
@@ -160,9 +160,11 @@ class MyTasksFragment : Fragment() {
         var list: ArrayList<Task> = ArrayList<Task>()
         if(priority !=null)
         {
-            val task = AwsApisAsyncWrapper.getTaskIDasync().execute("1").get()
-            list.add(task)
-            Log.v("MyTaskFragment",task.toString())
+            for (taskID in user.getTaskIDs()) {
+                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskID).get()
+                list.add(task)
+                Log.v("MyTaskFragment", task.toString())
+            }
         }
         Log.v("MyTaskFragment","list of tasks created")
         /*    for (taskId in user.taskIDs) //TODO do analizy
