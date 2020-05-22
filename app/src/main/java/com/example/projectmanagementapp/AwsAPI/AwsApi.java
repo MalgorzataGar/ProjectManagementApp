@@ -94,6 +94,7 @@ public class AwsApi {
     }
 
     public static User getUser(String id) throws IOException, IllegalStateException {//TODO - check
+    //public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",userID,passwordHash);
             Request request = new Request.Builder().url(address).get().build();
@@ -118,7 +119,7 @@ public class AwsApi {
 
     }
 
-    public static Task getTask(String id) throws IOException, IllegalStateException{
+    public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getTask?taskID=%s&userID=%s&passwordHash=%s",id, userID, passwordHash);
             Log.v("REST", address);
@@ -145,8 +146,9 @@ public class AwsApi {
     }
 
     public static Team getTeam(String id) throws IOException, IllegalStateException{ //TODO
+    //public static Team getTeam(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
-            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/GroupData?groupID=%s", id);
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/GroupData?groupID=%s&userID=%s&passwordHash=%s", id,userID,passwordHash);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
@@ -167,7 +169,7 @@ public class AwsApi {
         }
     }
 
-    public static void postOrUpdateUser(User user) throws JSONException, IOException { //TODO
+    public static void updateUser(User user) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createUser";
         JsonObject json = new JsonObject();
         json.addProperty("userID",user.getID());
@@ -190,13 +192,18 @@ public class AwsApi {
     }
 
     public static void postOrUpdateTask(Task task) throws JSONException, IOException { //TODO
+    //public static void postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
+        json.addProperty("userID",userID);
+        json.addProperty("passwordHash",passwordHash);
         json.addProperty("creatorID",task.getCreatorID());
         json.addProperty("deadline",task.getDeadline());
         json.addProperty("executorsIDs",task.getExecutorsIDs().toString());
         json.addProperty("groupID",task.getGroupID());
-        json.addProperty("taskID",task.getID());
+        if(updateTask) {
+            json.addProperty("taskID", task.getID());
+        }
         json.addProperty("priority",task.getPriority());
         json.addProperty("state",task.getState());
         json.addProperty("taskDescription",task.getTaskDescription());
@@ -215,11 +222,16 @@ public class AwsApi {
     }
 
     public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
+    //public static void postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createGroup";
         JsonObject json = new JsonObject();
+        json.addProperty("userID",userID);
+        json.addProperty("passwordHash",passwordHash);
         json.addProperty("adminID",group.getAdminID());
         json.addProperty("groupName",group.getGroupName());
-        json.addProperty("groupID",group.getID());
+        if(updateGroup) {
+            json.addProperty("groupID", group.getID());
+        }
         json.addProperty("taskIDs",group.getTaskIDs().toString());
         json.addProperty("usersIDsROles",group.getUsersIDsROles().toString());
 
@@ -236,10 +248,11 @@ public class AwsApi {
         }
     }
 
-    public static void deleteUser(String id) throws IOException { //TODO
+    public static void deleteUser(User user) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteUser";
         JsonObject json = new JsonObject();
-        json.addProperty("userID",id);
+        json.addProperty("userID",user.getID());
+        json.addProperty("passwordHash",user.getPasswordHash());
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -254,9 +267,12 @@ public class AwsApi {
     }
 
     public static void deleteTask(String id) throws IOException { //TODO
+    //public static void deleteTask(String taskID, String userID, String passwordHash) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteTask";
         JsonObject json = new JsonObject();
-        json.addProperty("taskID",id);
+        json.addProperty("taskID",taskID);
+        json.addProperty("userID",userID);
+        json.addProperty("passwordHash",passwordHash);
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -271,9 +287,12 @@ public class AwsApi {
     }
 
     public static void deleteGroup(String id) throws IOException { //TODO
+    //public static void deleteGroup(String groupID, String userID, String passwordHash) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteGroup";
         JsonObject json = new JsonObject();
-        json.addProperty("groupID",id);
+        json.addProperty("groupID",groupID);
+        json.addProperty("userID",userID);
+        json.addProperty("passwordHash",passwordHash);
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
                 .url(url)

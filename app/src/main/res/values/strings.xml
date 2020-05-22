@@ -3,7 +3,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
@@ -22,10 +22,27 @@
     <string name="menu_addgroup">Add Group</string>
     <string name="menu_editgroup">Edit Group</string>
     <string name="menu_task">Task Details</string>
+    <string name="Groupname">Group name</string>
+    <string name="Nameedit">name</string>
+    <string name="GroupID">Group ID</string>
+    <string name="groupID">groupID</string>
+    <string name="AdminID">Admin ID</string>
+    <string name="adminID">adminID</string>
+    <string name="Tasks">Tasks</string>
+    <string name="tasksIDs">tasksIDs</string>
+    <string name="UsersRoles">Users &amp; roles</string>
+    <string name="IDsRoles">IDs &amp; roles (format: 1:member;)</string>
+    <string name="Gr">Groups:</string>
+    <string name="Us">Users:</string>
+    <string name="Ts">Tasks:</string>
 
     <string-array name="priorityList">
         <item>minor</item>
         <item>normal</item>
         <item>major</item>
+    </string-array>
+
+    <string-array name="groupIDs">
+        <item>New group</item>
     </string-array>
 </resources>

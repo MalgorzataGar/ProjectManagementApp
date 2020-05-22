@@ -21,6 +21,7 @@ import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.OnItemClickListener
+import com.example.projectmanagementapp.extensions.loadPreference
 import com.example.projectmanagementapp.ui.TaskView.TaskFragment
 
 class GroupTasksFragment : Fragment() {
@@ -30,6 +31,8 @@ class GroupTasksFragment : Fragment() {
     var navController: NavController? = null
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: com.example.projectmanagementapp.extensions.ListAdapter
+    lateinit var id: String
+    lateinit var hash: String
 
     companion object {
         var TAG = GroupTasksFragment::class.java.simpleName
@@ -62,6 +65,8 @@ class GroupTasksFragment : Fragment() {
         setUpAdapter()
         initializeRecyclerView()
         setUpDummyData()
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -109,7 +114,7 @@ class GroupTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        adapter.clear()
+        /*adapter.clear()
         //TODO : add user id as global
         val user : User = AwsApi.getUser("1")
         val team : Team = AwsApi.getTeam("1")
@@ -118,6 +123,6 @@ class GroupTasksFragment : Fragment() {
         {
             list.add(AwsApi.getTask(taskId))
         }
-        adapter.addItems(list)
+        adapter.addItems(list)*/
     }
 }

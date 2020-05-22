@@ -18,7 +18,7 @@ public class AwsApiPostTest {
     public void postOrUpdateUser() throws IOException, JSONException {
         /*List<String> grpIDS = new ArrayList();
         User user = new User(grpIDS,"login",grpIDS,"6","androidTest","lksadjlkasdlnasd");
-        AwsApi.postOrUpdateUser(user);*/
-        AwsApi.deleteGroup("2");
+        AwsApi.postOrUpdateUser(user);
+        AwsApi.deleteGroup("2");*/
     }
 }

@@ -20,6 +20,7 @@ import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.OnItemClickListener
+import com.example.projectmanagementapp.extensions.loadPreference
 import com.example.projectmanagementapp.ui.TaskView.TaskFragment
 import com.google.android.material.snackbar.Snackbar
 
@@ -30,6 +31,8 @@ class MyTasksFragment : Fragment() {
     var navController: NavController? = null
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: com.example.projectmanagementapp.extensions.ListAdapter
+    lateinit var id :String
+    lateinit var hash :String
 
     companion object {
         var TAG = MyTasksFragment::class.java.simpleName
@@ -46,6 +49,8 @@ class MyTasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onCreateComponent()
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
     }
 
     private fun onCreateComponent() {
@@ -126,14 +131,14 @@ class MyTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        adapter.clear()
+        /*adapter.clear()
         //TODO : add user id as global
         val user : User = AwsApi.getUser("1")
         var list: ArrayList<Task> = ArrayList<Task>()
         for (taskId in user.taskIDs)
         {
-            list.add(AwsApi.getTask(taskId))
+           // list.add(AwsApi.getTask(taskId))
         }
-        adapter.addItems(list)
+        adapter.addItems(list)*/
     }
 }
