@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
 import androidx.core.os.bundleOf
 
 import androidx.fragment.app.Fragment
@@ -56,7 +59,7 @@ class GroupTasksFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_mytasks, container, false);
+        rootView = inflater.inflate(R.layout.fragment_grouptasks, container, false);
         initView()
         return rootView
     }
@@ -67,7 +70,48 @@ class GroupTasksFragment : Fragment() {
         setUpDummyData()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
+        setUpGroups()
+        setFilterListener()
     }
+
+
+
+    private fun setFilterListener() {
+    val filterButton: Button = rootView.findViewById(R.id.applyButton)
+    filterButton.setOnClickListener {
+        filtrTasks()
+    }
+}
+    private fun filtrTasks() {
+        val groupSpinner : Spinner = rootView.findViewById(R.id.spinnerGroup)
+        val selected = groupSpinner.selectedItem.toString()
+        if(selected != "All")
+        {
+
+        }
+    }
+
+    private fun setUpGroups() {
+        val group: Spinner = rootView.findViewById(R.id.spinnerGroup)
+        //val list: MutableList<String> = GetUserGroups()
+        val list : MutableList<String> = GetDummyGroups()
+        val dataAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            rootView.context,
+            android.R.layout.simple_spinner_item, list
+        )
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        group.setAdapter(dataAdapter)
+    }
+
+    private fun GetDummyGroups(): MutableList<String> {
+        val list  = java.util.ArrayList<String>()
+        list.add("All")
+        list.add("Informatycy")
+        list.add("Elektronika")
+        list.add("Marketing")
+        return list
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -114,10 +158,7 @@ class GroupTasksFragment : Fragment() {
     }
     private fun getTaskList()
     {
-        /*adapter.clear()
-        //TODO : add user id as global
-        val user : User = AwsApi.getUser("1")
-        val team : Team = AwsApi.getTeam("1")
+        /*adapter.clear()\
         var list: ArrayList<Task> = ArrayList<Task>()
         for (taskId in team.taskIDs)
         {

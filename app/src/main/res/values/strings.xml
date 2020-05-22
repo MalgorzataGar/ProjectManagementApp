@@ -22,6 +22,9 @@
     <string name="menu_addgroup">Add Group</string>
     <string name="menu_editgroup">Edit Group</string>
     <string name="menu_task">Task Details</string>
+    <string name="stateButtonStartProgress">Start progress</string>
+    <string name="stateButtonFinish">Finish</string>
+    <string name="stateButtonClose">Close</string>
     <string name="Groupname">Group name</string>
     <string name="Nameedit">name</string>
     <string name="GroupID">Group ID</string>
@@ -35,11 +38,23 @@
     <string name="Gr">Groups:</string>
     <string name="Us">Users:</string>
     <string name="Ts">Tasks:</string>
+    <string name="menu_logout">Logout</string>
 
     <string-array name="priorityList">
         <item>minor</item>
         <item>normal</item>
         <item>major</item>
+    </string-array>
+    <string-array name="priorityWithEmptyList">
+        <item>All</item>
+        <item>minor</item>
+        <item>normal</item>
+        <item>major</item>
+    </string-array>
+    <string-array name="stateList">
+        <item>todo</item>
+        <item>in_progress</item>
+        <item>done</item>
     </string-array>
 
     <string-array name="groupIDs">

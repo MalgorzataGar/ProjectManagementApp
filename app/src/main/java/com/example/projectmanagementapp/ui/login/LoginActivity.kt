@@ -16,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import com.example.projectmanagementapp.MainActivity
 import com.example.projectmanagementapp.R
+import com.example.projectmanagementapp.data.model.LoggedInUser
 import com.example.projectmanagementapp.extensions.savePreference
 
 
@@ -29,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
+        checkIfUserIsLoged()
 
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
@@ -103,6 +106,15 @@ class LoginActivity : AppCompatActivity() {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
+        }
+    }
+
+    private fun checkIfUserIsLoged() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this.applicationContext)
+        if(prefs.contains("Name") && prefs.contains(("Id")))
+        {
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
         }
     }
 

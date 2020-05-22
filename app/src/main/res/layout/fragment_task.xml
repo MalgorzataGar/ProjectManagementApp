@@ -270,6 +270,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
+            android:id = "@+id/changeStateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -279,12 +280,13 @@
             android:textColor="@color/colorPrimary" />
 
         <Button
+            android:id = "@+id/deleteButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@color/colorAccent"
-            android:text="Close"
+            android:text="Delete"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 

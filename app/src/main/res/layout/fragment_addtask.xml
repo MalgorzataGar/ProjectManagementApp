@@ -130,8 +130,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1.4"
             android:paddingLeft="10dp"
-            android:singleLine="true"
-            android:entries="@array/priorityList" />
+            android:singleLine="true"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/fifthLayout"

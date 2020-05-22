@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -23,6 +24,7 @@ class TaskFragment : Fragment() {
     private lateinit var root :View
     private lateinit var id: String
     private lateinit var hash: String
+    private lateinit var task : Task
 
     companion object {
         var TAG = TaskFragment::class.java.simpleName
@@ -45,11 +47,37 @@ class TaskFragment : Fragment() {
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
         initView(taskId)
+        initButtons()
         return root
     }
 
+    private fun initButtons() {
+        val stateButton: Button = root.findViewById(R.id.changeStateButton)
+        val deleteButton: Button = root.findViewById(R.id.deleteButton)
+        stateButton.setOnClickListener {
+            ChangeTaskState()
+        }
+        deleteButton.setOnClickListener {
+            DeleteTask()
+        }
+    }
+
+    private fun DeleteTask() {
+        //aws api delete task
+    }
+
+    private fun ChangeTaskState() {
+        val text = task.state
+        /*when (text) {
+            "todo" -> //aws api update task state
+            "inprogress" ->// aws api update task state
+            "done" -> //aws api close task
+        }*/
+        setStateButtonText()
+    }
+
     private fun initView(id: String?) {
-        val task : Task = GetTaskByID(id)
+        task  = GetTaskByID(id)
         val executorTextView: TextView = root.findViewById(R.id.taskExecutor)
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val creatorTextView: TextView = root.findViewById(R.id.taskCreator)
@@ -66,6 +94,19 @@ class TaskFragment : Fragment() {
             stateTextView.text = task.state
             descriptionTextView.text = task.taskDescription
         })
+        setStateButtonText()
+    }
+
+    private fun setStateButtonText() {
+        val text = task.state
+        val stateButton: Button = root.findViewById(R.id.changeStateButton)
+        when (text) {
+            "todo" -> stateButton.text = getString(R.string.stateButtonStartProgress)
+            "inprogress" -> stateButton.text = getString(R.string.stateButtonFinish)
+            "done" -> stateButton.text = getString(R.string.stateButtonClose)
+
+        }
+
     }
 
     private fun GetExecutorById(executorID: String?): User? {

@@ -38,7 +38,6 @@ class AddTaskFragment : Fragment() {
         addTaskViewModel =
                 ViewModelProviders.of(this).get(AddTaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        //myId = (getActivity()?.getApplication() as UserProvider).getUserId().toString()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
 

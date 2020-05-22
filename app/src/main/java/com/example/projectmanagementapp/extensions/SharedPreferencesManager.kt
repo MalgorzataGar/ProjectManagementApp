@@ -20,6 +20,12 @@ import androidx.preference.PreferenceManager
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         return prefs.getString(name, null)
     }
+    fun removeAllPreference(context: Context?) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = prefs.edit()
+        editor.clear()
+        editor.apply();
+    }
 
 
 

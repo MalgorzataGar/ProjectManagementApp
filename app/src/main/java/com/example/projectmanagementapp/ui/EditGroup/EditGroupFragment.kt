@@ -20,7 +20,7 @@ class EditGroupFragment : Fragment(){
     ): View? {
         editGroupViewModel =
             ViewModelProviders.of(this).get(EditGroupViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_addtask, container, false)
+        val root = inflater.inflate(R.layout.fragment_editgroup, container, false)
         editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
         return root
