@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
-import com.example.projectmanagementapp.extensions.UserProvider
+import com.example.projectmanagementapp.extensions.loadPreference
 import java.util.*
 
 
@@ -25,7 +25,8 @@ class AddTaskFragment : Fragment() {
     private lateinit var addTaskViewModel: AddTaskViewModel
     private lateinit var root: View
     private lateinit var editDate : Button
-    private lateinit var myId : String
+    private lateinit var id: String
+    private lateinit var hash: String
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -37,7 +38,9 @@ class AddTaskFragment : Fragment() {
                 ViewModelProviders.of(this).get(AddTaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
         //myId = (getActivity()?.getApplication() as UserProvider).getUserId().toString()
-        myId = "1"
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+
         setGroups()
         setExecutors()
         setButtonListeners()
@@ -155,8 +158,8 @@ class AddTaskFragment : Fragment() {
         val group : Spinner = root.findViewById(R.id.taskGroup)
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
-        val task =  Task(myId,editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
-            getGroupId(group.selectedItem.toString()),myId,priorityDropdown.selectedItem.toString(),
+        val task =  Task(id,editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
+            getGroupId(group.selectedItem.toString()),id,priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
        // AwsApi.postOrUpdateTask(task)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()

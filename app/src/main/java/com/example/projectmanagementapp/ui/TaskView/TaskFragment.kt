@@ -12,11 +12,14 @@ import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.loadPreference
 
 class TaskFragment : Fragment() {
 
     private lateinit var taskViewModel: TaskViewModel
     private lateinit var root :View
+    private lateinit var id: String
+    private lateinit var hash: String
 
     companion object {
         var TAG = TaskFragment::class.java.simpleName
@@ -35,8 +38,10 @@ class TaskFragment : Fragment() {
         taskViewModel =
             ViewModelProviders.of(this).get(TaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_task, container, false);
-        val id = arguments?.getString("taskID")
-        initView(id)
+        val taskId = arguments?.getString("taskID")
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        initView(taskId)
         return root
     }
 

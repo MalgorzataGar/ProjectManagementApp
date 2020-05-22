@@ -3,7 +3,6 @@ package com.example.projectmanagementapp
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
@@ -15,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.projectmanagementapp.extensions.loadPreference
 import com.google.android.material.navigation.NavigationView
 
 
@@ -27,21 +27,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        //val fab: FloatingActionButton = findViewById(R.id.fab)
-        //fab.setOnClickListener { view ->
-          //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //        .setAction("Action", null).show()
-        //}
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val myIntent = intent
         val txtProfileName =
             navView.getHeaderView(0).findViewById<View>(R.id.header_user) as TextView
-        txtProfileName.setText(myIntent.getStringExtra("user"))
+        val userName = loadPreference(this.applicationContext,"Name")
+        txtProfileName.setText(userName)
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.nav_mytasks, R.id.nav_addtask, R.id.nav_grouptasks,
                 R.id.nav_addgroup,R.id.nav_editgroup), drawerLayout)
