@@ -37,7 +37,6 @@ class AddTaskFragment : Fragment() {
         addTaskViewModel =
                 ViewModelProviders.of(this).get(AddTaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        //myId = (getActivity()?.getApplication() as UserProvider).getUserId().toString()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
 
@@ -160,7 +159,7 @@ class AddTaskFragment : Fragment() {
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
         val task =  Task(id,editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
             getGroupId(group.selectedItem.toString()),id,priorityDropdown.selectedItem.toString(),
-            "new",descriptionTextView.text.toString(),nameTextView.text.toString())
+            "todo",descriptionTextView.text.toString(),nameTextView.text.toString())
        // AwsApi.postOrUpdateTask(task)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()

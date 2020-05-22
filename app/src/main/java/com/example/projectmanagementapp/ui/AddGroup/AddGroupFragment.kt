@@ -1,4 +1,4 @@
-package com.example.projectmanagementapp.ui.EditGroup
+package com.example.projectmanagementapp.ui.AddGroup
 
 import android.os.Bundle
 import android.view.LayoutInflater

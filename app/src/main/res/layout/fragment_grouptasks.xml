@@ -6,26 +6,83 @@
     android:layout_height="match_parent"
     tools:context="ui.GroupTasks.GroupTasksFragment">
 
-    <TextView
-        android:id="@+id/text_grouptasks"
+    <LinearLayout
+        android:id="@+id/groupLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintBottom_toTopOf="@+id/applyLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+
+        <TextView
+            android:text="Group"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.6"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack" />
+
+        <Spinner
+            android:id="@+id/spinnerGroup"
+            android:spinnerMode="dropdown"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1.4"
+            android:paddingLeft="10dp"
+            android:singleLine="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/applyLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:listitem="@layout/task_item" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/groupLayout">
+
+
+        <Button
+            android:id="@+id/applyButton"
+            android:text="Apply filter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="0.6"
+            android:gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/recyclerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/applyLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/task_item" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

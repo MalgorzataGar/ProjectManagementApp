@@ -21,17 +21,19 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/extensions/IdProvider.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/AddGroup/AddGroupFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/AddGroup/AddGroupFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/AddTask/AddTaskFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/AddTask/AddTaskFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/GroupTasks/GroupTasksFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/GroupTasks/GroupTasksFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/MyTasks/MyTasksFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/MyTasks/MyTasksFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/TaskView/TaskFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/TaskView/TaskFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/projectmanagementapp/ui/login/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-v21/fragment_addtask.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-v21/fragment_addtask.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_addtask.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_addtask.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_grouptasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_grouptasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_mytasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_mytasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_task.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_task.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/task_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/task_item.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
+import android.widget.Spinner
 import androidx.core.os.bundleOf
 
 import androidx.fragment.app.Fragment
@@ -68,6 +70,22 @@ class MyTasksFragment : Fragment() {
         initializeRecyclerView()
         setUpDummyData()
         setAddTaskButton()
+        setFilterListener()
+    }
+
+    private fun setFilterListener() {
+        val filterButton: Button = rootView.findViewById(R.id.applyButton)
+        filterButton.setOnClickListener {
+            filtrTasks()
+        }
+    }
+
+    private fun filtrTasks() {
+        val priority : Spinner = rootView.findViewById(R.id.taskPriority)
+        if(priority.selectedItem.toString() != "All")
+        {
+            //gettask list with priority
+        }
     }
 
     private fun setAddTaskButton() {
@@ -129,15 +147,29 @@ class MyTasksFragment : Fragment() {
         list.add(task3)
         adapter.addItems(list)
     }
-    private fun getTaskList()
+    private fun getTaskList(priority : String?)
     {
         adapter.clear()
         val user : User = AwsApi.getUser("1","")
         var list: ArrayList<Task> = ArrayList<Task>()
-        for (taskId in user.taskIDs)
+        if(priority !=null)
         {
-           // list.add(AwsApi.getTask(taskId))
+            for (taskId in user.taskIDs)
+            {
+                //val task = AwsApi.getTask(taskId)
+                //if task priority == priority
+                // list.add(AwsApi.getTask(taskId))
+            }
         }
+        else
+        {
+            for (taskId in user.taskIDs)
+            {
+                //val task = AwsApi.getTask(taskId)
+                // list.add(AwsApi.getTask(taskId))
+            }
+        }
+
         adapter.addItems(list)
     }
 }
