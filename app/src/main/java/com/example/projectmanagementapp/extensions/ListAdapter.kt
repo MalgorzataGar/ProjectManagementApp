@@ -42,7 +42,7 @@ class ListAdapter: BaseRecyclerViewAdapter<Task>() {
         }
 
         private fun GetStateIcon(state: String?): Int {
-            if(state == "todo")  return R.drawable.todo
+            if(state == "new")  return R.drawable.todo
             else if(state == "inprogress") return R.drawable.inprogress
             else if(state == "done") return R.drawable.done
             else return 0

@@ -20,6 +20,7 @@ class EditGroupFragment : Fragment(){
     private lateinit var id: String
     private lateinit var hash: String
     private lateinit var groups : ArrayList<Team>
+    private lateinit var selectedGroup : Team
     private lateinit var users : ArrayList<User>
     private lateinit var usersNames : Array<CharSequence>
     private  var selectedMembers: ArrayList<CharSequence> = ArrayList<CharSequence>()
@@ -88,12 +89,12 @@ class EditGroupFragment : Fragment(){
     }
 
     private fun setGroupData(name: String) {
-       // val group = groups.find{it.groupName == name}
+       // selectedGroup = groups.find{it.groupName == name}
         val dummyTaskList = ArrayList<String>()
         dummyTaskList.add("2")
         val group : Team = Team(id,name,"5", dummyTaskList)
         val nameText: EditText = root.findViewById(R.id.nameEdit)
-        val adminId: EditText = root.findViewById(R.id.adminIDEdit)
+        val adminId: EditText = root.findViewById(R.id.adminEdit)
         nameText.setText(group?.groupName)
         adminId.setText(group?.adminID)
          checkedMembers = BooleanArray(usersNames.size)
@@ -133,14 +134,35 @@ class EditGroupFragment : Fragment(){
 
 
     private fun ClearPage() {
-
-        val group : Spinner = root.findViewById(R.id.taskGroup)
+        val group : Spinner = root.findViewById(R.id.groupToEdit)
         group.setSelection(0)
+        var nameText : EditText = root.findViewById(R.id.nameEdit)
+        var adminText : EditText = root.findViewById(R.id.adminEdit)
+        nameText.setText("")
+        adminText.setText("")
+        selectedMembers.clear()
+        canChooseMembers = false
 
     }
 
     private fun SubmitUpdate() {
+        var nameText : EditText = root.findViewById(R.id.nameEdit)
+        var adminText : EditText = root.findViewById(R.id.adminEdit)
+        var usersIds = getSelectedUsersIds()
+
+        //update group and save
+        Toast.makeText(root.context,"Updated",Toast.LENGTH_SHORT).show()
         ClearPage()
+    }
+    private fun getSelectedUsersIds(): ArrayList<String> {
+        var usersIds = ArrayList<String>()
+        for(memberName in selectedMembers.iterator())
+        {
+            var user = users.find{x-> x.name == memberName}
+            if (user != null)
+                usersIds.add(user.ID)
+        }
+        return usersIds
     }
     private fun setMembers() {
         //val users =  AwsApi.GetUsers()
