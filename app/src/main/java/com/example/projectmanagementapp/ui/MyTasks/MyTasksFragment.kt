@@ -134,7 +134,7 @@ class MyTasksFragment : Fragment() {
         var task1 = Task()
         task1.taskName = "Taks1"
         task1.priority = "normal"
-        task1.state = "todo"
+        task1.state = "new"
         task1.ID = "1"
         var task2 = Task()
         task2.taskName = "Taks2"

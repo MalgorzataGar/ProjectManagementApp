@@ -29,8 +29,8 @@
     <string name="Nameedit">name</string>
     <string name="GroupID">Group ID</string>
     <string name="groupID">groupID</string>
-    <string name="AdminID">Admin ID</string>
-    <string name="adminID">adminID</string>
+    <string name="AdminID">Admin </string>
+    <string name="adminID">admin</string>
     <string name="Tasks">Tasks</string>
     <string name="tasksIDs">tasksIDs</string>
     <string name="UsersRoles">Users &amp; roles</string>
@@ -52,8 +52,8 @@
         <item>major</item>
     </string-array>
     <string-array name="stateList">
-        <item>todo</item>
-        <item>in_progress</item>
+        <item>new</item>
+        <item>inprogress</item>
         <item>done</item>
     </string-array>
 
