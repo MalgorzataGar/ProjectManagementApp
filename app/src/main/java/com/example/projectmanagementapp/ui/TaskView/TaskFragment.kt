@@ -101,12 +101,10 @@ class TaskFragment : Fragment() {
         val text = task.state
         val stateButton: Button = root.findViewById(R.id.changeStateButton)
         when (text) {
-            "todo" -> stateButton.text = getString(R.string.stateButtonStartProgress)
+            "new" -> stateButton.text = getString(R.string.stateButtonStartProgress)
             "inprogress" -> stateButton.text = getString(R.string.stateButtonFinish)
             "done" -> stateButton.text = getString(R.string.stateButtonClose)
-
         }
-
     }
 
     private fun GetExecutorById(executorID: String?): User? {
@@ -121,9 +119,7 @@ class TaskFragment : Fragment() {
 
 
     private fun GetTaskByID(id: String?): Task {
-        return AwsApisAsyncWrapper.getTaskIDasync().execute("1").get() //TODO change 1 to id
-        //return Task("2","12.05.2020", listOf("1"),
-        //    "groupID",id,"important","new","test task","Name")
+        return AwsApisAsyncWrapper.getTaskIDasync().execute(id).get()
     }
 
 }

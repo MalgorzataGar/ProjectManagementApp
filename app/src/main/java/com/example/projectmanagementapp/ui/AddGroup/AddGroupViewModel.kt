@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 
 class AddGroupViewModel : ViewModel(){
     private val _text = MutableLiveData<String>().apply {
-        value = "Add new Task"
     }
     val text: LiveData<String> = _text
 }

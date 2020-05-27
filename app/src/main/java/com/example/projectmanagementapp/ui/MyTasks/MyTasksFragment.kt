@@ -84,7 +84,11 @@ class MyTasksFragment : Fragment() {
         val priority : Spinner = rootView.findViewById(R.id.taskPriority)
         if(priority.selectedItem.toString() != "All")
         {
-            //gettask list with priority
+            getTaskList(priority = priority.selectedItem.toString())
+        }
+        else
+        {
+            getTaskList(priority = "")
         }
     }
 
@@ -149,40 +153,43 @@ class MyTasksFragment : Fragment() {
     }
     private fun getTaskList(priority : String?)
     {
-        val userID = "1" //TODO replace with singleton
 
         Log.v("MyTaskFragment","Enter getTaskList()")
         adapter.clear()
         //user analise
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(userID).get()
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
         Log.v("MyTaskFragment",user.toString())
 
         var list: ArrayList<Task> = ArrayList<Task>()
-        if(priority !=null)
+        if(!priority.isNullOrEmpty())
         {
-            for (taskID in user.getTaskIDs()) {
+            /*for (taskID in user.getTaskIDs()) {
                 val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskID).get()
                 list.add(task)
                 Log.v("MyTaskFragment", task.toString())
             }
-        }
-        Log.v("MyTaskFragment","list of tasks created")
-        /*    for (taskId in user.taskIDs) //TODO do analizy
+
+            Log.v("MyTaskFragment","list of tasks created")*/
+            for (taskId in user.taskIDs) //TODO do analizy
             {
-                //val task = AwsApi.getTask(taskId)
-                //if task priority == priority
-                // list.add(AwsApi.getTask(taskId))
+                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                if (task.priority == priority && task.taskName != null) {
+                    list.add(task)
+                }
             }
         }
         else
         {
             for (taskId in user.taskIDs)
             {
-                //val task = AwsApi.getTask(taskId)
-                // list.add(AwsApi.getTask(taskId))
+                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                if(task.taskName != null)
+                {
+                    list.add(task)
+                }
+
             }
         }
-        */
         adapter.addItems(list)
     }
 

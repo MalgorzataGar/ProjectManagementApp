@@ -1,6 +1,7 @@
 package com.example.projectmanagementapp.ui.GroupTasks
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmanagementapp.AwsAPI.AwsApi
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
@@ -30,6 +32,7 @@ import com.example.projectmanagementapp.ui.TaskView.TaskFragment
 class GroupTasksFragment : Fragment() {
 
     private lateinit var groupTasksViewModel: GroupTasksFragment
+    private lateinit var groupList :ArrayList<Team>
     protected lateinit var rootView: View
     var navController: NavController? = null
     lateinit var recyclerView: RecyclerView
@@ -66,14 +69,22 @@ class GroupTasksFragment : Fragment() {
 
     private fun initView(){
         setUpAdapter()
+        //initGroups()
         initializeRecyclerView()
-        setUpDummyData()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
+        getTaskList(group = "")
         setUpGroups()
         setFilterListener()
     }
 
+    private fun initGroups() {
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        for( groupid in user.groupIDs)
+        {
+            groupList.add(AwsApi.getTeam(groupid))
+        }
+    }
 
 
     private fun setFilterListener() {
@@ -87,14 +98,19 @@ class GroupTasksFragment : Fragment() {
         val selected = groupSpinner.selectedItem.toString()
         if(selected != "All")
         {
-
+            getTaskList(group = selected)
         }
+        else
+        {
+            getTaskList(group = "")
+        }
+
     }
 
     private fun setUpGroups() {
         val group: Spinner = rootView.findViewById(R.id.spinnerGroup)
-        //val list: MutableList<String> = GetUserGroups()
-        val list : MutableList<String> = GetDummyGroups()
+        //val list: MutableList<String> = GetUserGroupsNames()
+        val list : MutableList<String> = GetDummyGroupsNames()
         val dataAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             rootView.context,
             android.R.layout.simple_spinner_item, list
@@ -103,12 +119,21 @@ class GroupTasksFragment : Fragment() {
         group.setAdapter(dataAdapter)
     }
 
-    private fun GetDummyGroups(): MutableList<String> {
+    private fun GetDummyGroupsNames(): MutableList<String> {
         val list  = java.util.ArrayList<String>()
         list.add("All")
         list.add("Informatycy")
         list.add("Elektronika")
         list.add("Marketing")
+        return list
+    }
+    private fun GetUserGroupsNames(): MutableList<String> {
+        val list  = java.util.ArrayList<String>()
+        list.add("All")
+        for(group in groupList)
+        {
+            list.add(group.groupName)
+        }
         return list
     }
 
@@ -156,14 +181,45 @@ class GroupTasksFragment : Fragment() {
         list.add(task3)
         adapter.addItems(list)
     }
-    private fun getTaskList()
+    private fun getTaskList(group : String?)
     {
-        /*adapter.clear()\
+        Log.v("GroupTaskFragment","Enter getTaskList()")
+        adapter.clear()
+        //var groupId = groupList.find{it.groupName == group}
+
+        //user analis
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        Log.v("GroupTaskFragment",user.toString())
         var list: ArrayList<Task> = ArrayList<Task>()
-        for (taskId in team.taskIDs)
+        var taskIdList: ArrayList<String> = ArrayList()
+        taskIdList.addAll(user.taskIDs)
+        /*for(groupid in user.groupIDs)
         {
-            list.add(AwsApi.getTask(taskId))
+            taskIdList.addAll(AwsApi.getTeam(groupid).taskIDs)
+        }*/
+        if(!group.isNullOrEmpty())
+        {
+            for (taskId in taskIdList) //TODO do analizy
+            {
+                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                /*if (task.groupID == groupId && task.taskName != null) {
+                    list.add(task)
+                }*/
+                list.add(task)
+            }
         }
-        adapter.addItems(list)*/
+        else
+        {
+            for (taskId in taskIdList)
+            {
+                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                if(task.taskName != null)
+                {
+                    list.add(task)
+                }
+
+            }
+        }
+        adapter.addItems(list)
     }
 }

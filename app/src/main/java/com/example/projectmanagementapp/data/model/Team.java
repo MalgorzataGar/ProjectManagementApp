@@ -38,4 +38,10 @@ public class Team {
         this.taskIDs = taskIDs;
         this.usersIDsROles = usersIDsROles;
     }
+    public Team(String adminID, String groupName, String ID, List<String> taskIDs) {
+        this.adminID = adminID;
+        this.groupName = groupName;
+        this.ID = ID;
+        this.taskIDs = taskIDs;
+    }
 }

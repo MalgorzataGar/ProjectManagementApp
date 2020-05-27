@@ -154,7 +154,6 @@ class AddTaskFragment : Fragment() {
 
     private fun SubmitTask() {
         Log.v("AddTaskFragment","Submit Task was chosen")
-        val userID = "1" //TODO replace when singleton
         val taskID = "13" //TODO replace with id handling
         val priorityDropdown: Spinner = root.findViewById(R.id.taskPriority)
         val executor: Spinner = root.findViewById(R.id.taskExecutor)
@@ -162,7 +161,7 @@ class AddTaskFragment : Fragment() {
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
 
-        val task =  Task(userID, editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
+        val task =  Task(id, editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
             getGroupId(group.selectedItem.toString()), taskID, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Log.v("AddTaskFragment", "Task object was created: $task")
@@ -170,7 +169,7 @@ class AddTaskFragment : Fragment() {
         postOrUpdateTaskAsync().execute(Pair(task,false)) //TODO if update task - create handling for true
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
-        //mTODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)
+        //TODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)
     }
 
     private fun getExecutorId(toString: String): MutableList<String> {

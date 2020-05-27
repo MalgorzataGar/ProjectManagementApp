@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_addgroup"
-        android:name="com.example.projectmanagementapp.ui.GroupTasks.GroupTasksFragment"
+        android:name="com.example.projectmanagementapp.ui.AddGroup.AddGroupFragment"
         android:label="@string/menu_addgroup"
         tools:layout="@layout/fragment_addgroup" />
     <fragment
