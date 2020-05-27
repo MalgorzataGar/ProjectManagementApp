@@ -69,4 +69,20 @@ public class Task {
     public String toString() {
         return ID+" "+taskName;
     }
+
+    public boolean equals(Task otherTask){
+        if(!this.creatorID.equals(otherTask.creatorID)){
+            return false;
+        }
+        if(!this.deadline.equals(otherTask.deadline)){
+            return false;
+        }
+        if(!this.groupID.equals(otherTask.groupID)){
+            return false;
+        }
+        if(!this.taskName.equals(otherTask.taskName)){
+            return false;
+        }
+        return true;
+    }
 }

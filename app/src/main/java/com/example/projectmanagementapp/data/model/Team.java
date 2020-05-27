@@ -8,7 +8,7 @@ public class Team {
     public String groupName;
     public String ID;
     public List<String> taskIDs;
-    public Map<String,String> usersIDsROles;
+    public List<String> usersIDs;
     public Team(){}
 
     public String getAdminID() {
@@ -27,21 +27,34 @@ public class Team {
         return taskIDs;
     }
 
-    public Map<String, String> getUsersIDsROles() {
-        return usersIDsROles;
+    public List<String> getUsersIDs() {
+        return usersIDs;
     }
 
-    public Team(String adminID, String groupName, String ID, List<String> taskIDs, Map<String, String> usersIDsROles) {
+    public Team(String adminID, String groupName, String ID, List<String> taskIDs, List<String> usersIDs) {
         this.adminID = adminID;
         this.groupName = groupName;
         this.ID = ID;
         this.taskIDs = taskIDs;
-        this.usersIDsROles = usersIDsROles;
+        this.usersIDs = usersIDs;
     }
     public Team(String adminID, String groupName, String ID, List<String> taskIDs) {
         this.adminID = adminID;
         this.groupName = groupName;
         this.ID = ID;
         this.taskIDs = taskIDs;
+    }
+
+    public boolean equals(Team otherTeam){
+        if(!this.ID.equals(otherTeam.ID)){
+            return false;
+        }
+        if(!this.adminID.equals(otherTeam.adminID)){
+            return false;
+        }
+        if(!this.groupName.equals(otherTeam.groupName)){
+            return false;
+        }
+        return true;
     }
 }

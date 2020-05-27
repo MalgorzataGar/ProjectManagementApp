@@ -11,7 +11,7 @@ class AwsApisAsyncWrapper {
         // Do the long-running work in here
         override fun doInBackground(vararg id1: String): Task? {
             Log.v("deb", id1[0])
-            return AwsApi.getTask(id1[0])
+            return AwsApi.getTask(id1[0],"1","fdaf");
         }
 
         // This is called each time you call publishProgress()
@@ -32,7 +32,7 @@ class AwsApisAsyncWrapper {
         // Do the long-running work in here
         override fun doInBackground(vararg userID: String): User? {
             Log.v("REST_getUser", userID[0])
-            return AwsApi.getUser(userID[0])
+            return AwsApi.getUser(userID[0],"sdf")
         }
 
         // This is called when doInBackground() is finished
@@ -48,7 +48,7 @@ class AwsApisAsyncWrapper {
         override fun doInBackground(vararg arg: Pair<Task, Boolean>): Void? {
             Log.v("REST_postTask",arg[0].toString())
             Log.v("REST_postTask", arg[0].first.toString())
-            AwsApi.postOrUpdateTask(arg[0].first, arg[0].second)
+            AwsApi.postOrUpdateTask(arg[0].first, arg[0].second,"1","sdf")
             return null
         }
 
@@ -60,3 +60,4 @@ class AwsApisAsyncWrapper {
 
     }
 }
+

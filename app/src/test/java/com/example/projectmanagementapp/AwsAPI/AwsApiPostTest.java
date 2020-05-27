@@ -1,5 +1,7 @@
 package com.example.projectmanagementapp.AwsAPI;
 
+import com.example.projectmanagementapp.data.model.Task;
+import com.example.projectmanagementapp.data.model.Team;
 import com.example.projectmanagementapp.data.model.User;
 
 import org.json.JSONException;
@@ -15,10 +17,32 @@ import static org.junit.Assert.*;
 public class AwsApiPostTest {
 
     @Test
-    public void postOrUpdateUser() throws IOException, JSONException {
-        /*List<String> grpIDS = new ArrayList();
-        User user = new User(grpIDS,"login",grpIDS,"6","androidTest","lksadjlkasdlnasd");
-        AwsApi.postOrUpdateUser(user);
-        AwsApi.deleteGroup("2");*/
+    public void UpdateUser() throws IOException, JSONException {
+        List<String> grpIDS = new ArrayList();
+        List<String> tasks = new ArrayList();
+        tasks.add("3");
+        User user = new User(grpIDS,"test@test.test",tasks,"2","androidTest","dasijioasdjijdsaijdsa");
+        int result = AwsApi.updateUser(user);
+        assertEquals(200,result);
+    }
+
+    @Test
+    public void postOrUpdateTask() throws IOException, JSONException{
+        List<String> exIDs = new ArrayList();
+        exIDs.add("1");
+        exIDs.add("2");
+        Task task = new Task("1","12:06:2020",exIDs,"2","084824","major","abandoned","Android test update task","New name");
+        int result = AwsApi.postOrUpdateTask(task,true,"1","dasijioasdjijdsaijdsa");
+        assertEquals(200,result);
+    }
+
+    @Test
+    public void postOrUpdateGroup() throws IOException, JSONException{
+        List<String> ids = new ArrayList();
+        ids.add("1");
+        ids.add("2");
+        Team team = new Team("2","Android test name","085006",ids,ids);
+        int result = AwsApi.postOrUpdateGroup(team,true,"2","dasijioasdjijdsaijdsa");
+        assertEquals(200,result);
     }
 }

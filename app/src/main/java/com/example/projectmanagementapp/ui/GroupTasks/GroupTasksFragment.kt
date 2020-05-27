@@ -82,7 +82,7 @@ class GroupTasksFragment : Fragment() {
         val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
         for( groupid in user.groupIDs)
         {
-            groupList.add(AwsApi.getTeam(groupid))
+            groupList.add(AwsApi.getTeam(groupid,user.id,user.passwordHash))
         }
     }
 

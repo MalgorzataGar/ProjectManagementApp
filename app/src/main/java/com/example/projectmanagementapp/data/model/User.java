@@ -47,6 +47,16 @@ public class User {
 
     @Override
     public String toString(){
-        return login+" "+ID+" gropus:"+groupIDs.toString()+" tasks"+taskIDs.toString();
+        return login+" "+ID+" groups:"+groupIDs.toString()+" tasks"+taskIDs.toString();
+    }
+
+    public boolean equals(User otherUser){
+        if(!this.login.equals(otherUser.login)){
+            return false;
+        }
+        if(!this.ID.equals(otherUser.ID)){
+            return false;
+        }
+        return true;
     }
 }
