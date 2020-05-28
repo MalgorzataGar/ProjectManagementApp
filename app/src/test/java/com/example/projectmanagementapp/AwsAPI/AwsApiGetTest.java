@@ -35,8 +35,8 @@ public class AwsApiGetTest {
         List<String> ids = new ArrayList();
         ids.add("1");
         ids.add("2");
-        Team team = new Team("2","Android test name","085006",ids,ids);
-        Team result = AwsApi.getTeam("085006","2","dasijioasdjijdsaijdsa");
+        Team team = new Team("2","Android test name","163501",ids,ids);
+        Team result = AwsApi.getTeam("163501","2","dasijioasdjijdsaijdsa");
         assertEquals(true,result.equals(team));
     }
 

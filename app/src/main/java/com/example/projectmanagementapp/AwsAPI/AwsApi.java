@@ -205,7 +205,8 @@ public class AwsApi {
         json.addProperty("passwordHash",passwordHash);
         json.addProperty("creatorID",task.getCreatorID());
         json.addProperty("deadline",task.getDeadline());
-        json.addProperty("executorsIDs", task.getExecutorsIDs().get(0)); // TODO in case of multiple executors change this call
+        json.addProperty("executorsIDs", task.getExecutorsIDs().toString()); // TODO in case of multiple executors change this call; DONE in cloud!
+        //json.add("executorsIDs",json.getAsJsonArray(task.getExecutorsIDs().toString()));
         json.addProperty("groupID",task.getGroupID());
         if(updateTask) {
             json.addProperty("taskID", task.getID());

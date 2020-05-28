@@ -19,8 +19,10 @@ public class AwsApiPostTest {
     @Test
     public void UpdateUser() throws IOException, JSONException {
         List<String> grpIDS = new ArrayList();
+        //grpIDS.add("1");
         List<String> tasks = new ArrayList();
         tasks.add("3");
+        tasks.add("2");
         User user = new User(grpIDS,"test@test.test",tasks,"2","androidTest","dasijioasdjijdsaijdsa");
         int result = AwsApi.updateUser(user);
         assertEquals(200,result);
@@ -41,7 +43,7 @@ public class AwsApiPostTest {
         List<String> ids = new ArrayList();
         ids.add("1");
         ids.add("2");
-        Team team = new Team("2","Android test name","085006",ids,ids);
+        Team team = new Team("2","Android test name","163501",ids,ids);
         int result = AwsApi.postOrUpdateGroup(team,true,"2","dasijioasdjijdsaijdsa");
         assertEquals(200,result);
     }
