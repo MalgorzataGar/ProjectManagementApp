@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        getSampleRESTRequest() // REST TEST
+        //getSampleRESTRequest() // REST TEST
 
         //val fab: FloatingActionButton = findViewById(R.id.fab)
         //fab.setOnClickListener { view ->

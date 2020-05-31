@@ -1,5 +1,6 @@
 package com.example.projectmanagementapp.ui.GroupTasks
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -79,7 +80,7 @@ class GroupTasksFragment : Fragment() {
     }
 
     private fun initGroups() {
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        val user : User = AwsApisAsyncWrapper(context as Context).getUserAsync().execute(id).get()
         for( groupid in user.groupIDs)
         {
             groupList.add(AwsApi.getTeam(groupid,user.id,user.passwordHash))
@@ -188,7 +189,7 @@ class GroupTasksFragment : Fragment() {
         //var groupId = groupList.find{it.groupName == group}
 
         //user analis
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        val user : User = AwsApisAsyncWrapper(context as Context).getUserAsync().execute(id).get()
         Log.v("GroupTaskFragment",user.toString())
         var list: ArrayList<Task> = ArrayList<Task>()
         var taskIdList: ArrayList<String> = ArrayList()
@@ -201,7 +202,7 @@ class GroupTasksFragment : Fragment() {
         {
             for (taskId in taskIdList) //TODO do analizy
             {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                val task = AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(taskId).get()
                 /*if (task.groupID == groupId && task.taskName != null) {
                     list.add(task)
                 }*/
@@ -212,7 +213,7 @@ class GroupTasksFragment : Fragment() {
         {
             for (taskId in taskIdList)
             {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                val task = AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(taskId).get()
                 if(task.taskName != null)
                 {
                     list.add(task)

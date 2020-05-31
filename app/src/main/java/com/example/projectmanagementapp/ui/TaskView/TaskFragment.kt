@@ -1,5 +1,6 @@
 package com.example.projectmanagementapp.ui.TaskView
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -119,7 +120,7 @@ class TaskFragment : Fragment() {
 
 
     private fun GetTaskByID(id: String?): Task {
-        return AwsApisAsyncWrapper.getTaskIDasync().execute(id).get()
+        return AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(id).get()
     }
 
 }

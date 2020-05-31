@@ -1,5 +1,6 @@
 package com.example.projectmanagementapp.ui.MyTasks
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -153,11 +154,10 @@ class MyTasksFragment : Fragment() {
     }
     private fun getTaskList(priority : String?)
     {
-
         Log.v("MyTaskFragment","Enter getTaskList()")
         adapter.clear()
         //user analise
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        val user : User = AwsApisAsyncWrapper(context as Context).getUserAsync().execute(id).get()
         Log.v("MyTaskFragment",user.toString())
 
         var list: ArrayList<Task> = ArrayList<Task>()
@@ -172,7 +172,7 @@ class MyTasksFragment : Fragment() {
             Log.v("MyTaskFragment","list of tasks created")*/
             for (taskId in user.taskIDs) //TODO do analizy
             {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                val task = AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(taskId).get()
                 if (task.priority == priority && task.taskName != null) {
                     list.add(task)
                 }
@@ -182,7 +182,7 @@ class MyTasksFragment : Fragment() {
         {
             for (taskId in user.taskIDs)
             {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
+                val task = AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(taskId).get()
                 if(task.taskName != null)
                 {
                     list.add(task)

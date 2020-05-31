@@ -32,8 +32,8 @@ class LoginRepository() {
     fun login(username: String, password: String): LoggedInUser? {
         // handle login
         val hash = getHash(password)
-        /*try {
-            val id = AwsApi.login(username, hash)
+        try {
+            val id = AwsApi.login("test@test.test", "dasijioasdjijdsaijdsa")
             if (id == null)
             {
                 throw Exception("Invalid operation")
@@ -41,7 +41,7 @@ class LoginRepository() {
             else
             {
                 val user  = AwsApi.getUser(id,hash)
-                val loggedInUser = LoggedInUser(user.id, user.name)
+                val loggedInUser = LoggedInUser(user.id, user.name,hash)
                 setLoggedInUser(loggedInUser)
                 return loggedInUser
             }
@@ -50,10 +50,10 @@ class LoginRepository() {
         {
             //TODO handle exception
         }
-        return null*/
-          val user =  LoggedInUser("5","JaneDoe")
-        setLoggedInUser(user)
-        return user
+        return null
+        //  val user =  LoggedInUser("3","JaneDoe", "dasijioasdjijdsaijdsa")
+        //setLoggedInUser(user)
+        //return user
     }
 
     private fun getHash(password: String): String {

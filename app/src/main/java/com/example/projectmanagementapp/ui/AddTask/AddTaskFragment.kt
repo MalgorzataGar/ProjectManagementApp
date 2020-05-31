@@ -1,6 +1,7 @@
 package com.example.projectmanagementapp.ui.AddTask
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
@@ -166,7 +167,7 @@ class AddTaskFragment : Fragment() {
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Log.v("AddTaskFragment", "Task object was created: $task")
 
-        postOrUpdateTaskAsync().execute(Pair(task,false)) //TODO if update task - create handling for true
+        AwsApisAsyncWrapper(context as Context).postOrUpdateTaskAsync().execute(Pair(task,false)) //TODO if update task - create handling for true
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
         //TODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)

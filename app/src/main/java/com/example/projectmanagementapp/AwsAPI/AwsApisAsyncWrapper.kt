@@ -1,17 +1,25 @@
 package com.example.projectmanagementapp.AwsAPI
 
+import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.loadPreference
 
-class AwsApisAsyncWrapper {
-    class getTaskIDasync : AsyncTask<String, Int, Task>() {
+class AwsApisAsyncWrapper (context: Context){
+    public var id : String
+    private  val passwordHash : String
+    init {
+        id = loadPreference(context,"Id") as String
+        passwordHash = loadPreference(context,"PasswordHash") as String
+    }
+    inner class getTaskIDasync : AsyncTask<String, Int, Task>() {
 
         // Do the long-running work in here
         override fun doInBackground(vararg id1: String): Task? {
             Log.v("deb", id1[0])
-            return AwsApi.getTask(id1[0],"1","fdaf");
+            return AwsApi.getTask(id1[0],id,passwordHash);
         }
 
         // This is called each time you call publishProgress()
@@ -27,12 +35,12 @@ class AwsApisAsyncWrapper {
 
     }
 
-    class getUserAsync : AsyncTask<String, Int, User>() {
+    inner class getUserAsync : AsyncTask<String, Int, User>() {
 
         // Do the long-running work in here
         override fun doInBackground(vararg userID: String): User? {
             Log.v("REST_getUser", userID[0])
-            return AwsApi.getUser(userID[0],"sdf")
+            return AwsApi.getUser(userID[0],passwordHash)
         }
 
         // This is called when doInBackground() is finished
@@ -42,13 +50,13 @@ class AwsApisAsyncWrapper {
         }
 
     }
-    class postOrUpdateTaskAsync: AsyncTask<Pair<Task, Boolean>, Int, Void>() {
+    inner class postOrUpdateTaskAsync: AsyncTask<Pair<Task, Boolean>, Int, Void>() {
 
         // Do the long-running work in here
         override fun doInBackground(vararg arg: Pair<Task, Boolean>): Void? {
             Log.v("REST_postTask",arg[0].toString())
             Log.v("REST_postTask", arg[0].first.toString())
-            AwsApi.postOrUpdateTask(arg[0].first, arg[0].second,"1","sdf")
+            AwsApi.postOrUpdateTask(arg[0].first, arg[0].second,id,passwordHash)
             return null
         }
 

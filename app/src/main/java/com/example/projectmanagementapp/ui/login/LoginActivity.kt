@@ -65,8 +65,8 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
                 savePreference(this.applicationContext,"Name",loginResult.success.displayName)
-                savePreference(this.applicationContext,"Id","5")
-                savePreference(this.applicationContext,"PasswordHash","Iksadjlkasdlnasd")
+                savePreference(this.applicationContext,"Id",loginResult.success.id)
+                savePreference(this.applicationContext,"PasswordHash",loginResult.success.passwordHash)
                 val i = Intent(this, MainActivity::class.java)
                 startActivity(i)
             }
