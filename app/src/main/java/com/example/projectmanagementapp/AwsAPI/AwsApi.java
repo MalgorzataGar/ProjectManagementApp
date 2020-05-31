@@ -7,6 +7,7 @@ import com.example.projectmanagementapp.data.model.Team;
 import com.example.projectmanagementapp.data.model.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -93,7 +94,85 @@ public class AwsApi {
         }
     }
 
+    public static String login(String login, String passwordHash) throws IOException, IllegalStateException{
+        String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/login?login=test@test.test&passwordHash=dasijioasdjijdsaijdsa",login,passwordHash);
+        JsonObject json = new JsonObject();
+        RequestBody body = RequestBody.create(JSON,json.toString());
+        Request request = new Request.Builder()
+                .url(address)
+                .addHeader("Content-Type", "application/json")
+                .post(body)
+                .build();
+        Response res = getHttpClient().newCall(request).execute();
+        if (res!=null) {
+            String response = res.body().string();
+            JsonParser parser = new JsonParser();
+            JsonObject id = (JsonObject) parser.parse(response);
+            String ret = id.get("ID").toString();
+            String ret2 = ret.replace("\"","");
+            //System.out.println(ret2);
+            return ret2;
+        }
+        else{
+            return "null";
+        }
+    }
+
+    public static JsonObject getAllUsers(String userID, String passwordHash) throws IOException, IllegalStateException{
+        try {
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getAllUsers?userID=%s&passwordHash=%s",userID,passwordHash);
+            Request request = new Request.Builder().url(address).get().build();
+            Response response = getHttpClient().newCall(request).execute();
+            String body = response.body().string();
+            Log.v("REST_USER",body);
+            if (body != null) {
+                //System.out.println(body);
+                JsonParser parser = new JsonParser();
+                JsonObject groups = (JsonObject) parser.parse(body);
+                return groups;
+            } else {
+                return null;
+            }
+        }
+        catch(IllegalStateException e){
+            System.out.println(e);
+            return null;
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+
+    }
     //public static User getUser(String id) throws IOException, IllegalStateException {//TODO - check
+
+    public static JsonObject getAllGroups(String userID, String passwordHash) throws IOException, IllegalStateException{
+        try {
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getAllGroups?userID=%s&passwordHash=%s",userID,passwordHash);
+            Request request = new Request.Builder().url(address).get().build();
+            Response response = getHttpClient().newCall(request).execute();
+            String body = response.body().string();
+            Log.v("REST_USER",body);
+            if (body != null) {
+                System.out.println(body);
+                JsonParser parser = new JsonParser();
+                JsonObject groups = (JsonObject) parser.parse(body);
+                return groups;
+            } else {
+                return null;
+            }
+        }
+        catch(IllegalStateException e){
+            System.out.println(e);
+            return null;
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
     public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {  //TODO change when itroduced singleton
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",userID,passwordHash);
@@ -205,7 +284,8 @@ public class AwsApi {
         json.addProperty("passwordHash",passwordHash);
         json.addProperty("creatorID",task.getCreatorID());
         json.addProperty("deadline",task.getDeadline());
-        json.addProperty("executorsIDs", task.getExecutorsIDs().get(0)); // TODO in case of multiple executors change this call
+        json.addProperty("executorsIDs", task.getExecutorsIDs().toString()); // TODO in case of multiple executors change this call; DONE in cloud!
+        //json.add("executorsIDs",json.getAsJsonArray(task.getExecutorsIDs().toString()));
         json.addProperty("groupID",task.getGroupID());
         if(updateTask) {
             json.addProperty("taskID", task.getID());

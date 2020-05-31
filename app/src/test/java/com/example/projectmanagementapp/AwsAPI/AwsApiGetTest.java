@@ -4,6 +4,7 @@ package com.example.projectmanagementapp.AwsAPI;
 import com.example.projectmanagementapp.data.model.Task;
 import com.example.projectmanagementapp.data.model.Team;
 import com.example.projectmanagementapp.data.model.User;
+import com.google.gson.JsonObject;
 
 import org.junit.Test;
 
@@ -15,6 +16,23 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class AwsApiGetTest {
+    @Test
+    public void loginTest() throws IOException{
+        String result = AwsApi.login("test.test","dasijioasdjijdsaijdsa");
+        assertEquals("1",result);
+    }
+    @Test
+    public void getAllUsersTest() throws IOException{
+        JsonObject result = AwsApi.getAllUsers("1","dasijioasdjijdsaijdsa");
+        assertEquals(JsonObject.class,result.getClass());
+    }
+
+    @Test
+    public void getAllGroupsTest() throws IOException{
+        JsonObject result = AwsApi.getAllGroups("1","dasijioasdjijdsaijdsa");
+        assertEquals(JsonObject.class,result.getClass());
+    }
+
     @Test
     public void getUserTest() throws IOException {
         List<String> groupIDs = new ArrayList();
@@ -35,8 +53,8 @@ public class AwsApiGetTest {
         List<String> ids = new ArrayList();
         ids.add("1");
         ids.add("2");
-        Team team = new Team("2","Android test name","085006",ids,ids);
-        Team result = AwsApi.getTeam("085006","2","dasijioasdjijdsaijdsa");
+        Team team = new Team("2","Android test name","163501",ids,ids);
+        Team result = AwsApi.getTeam("163501","2","dasijioasdjijdsaijdsa");
         assertEquals(true,result.equals(team));
     }
 
