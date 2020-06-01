@@ -95,7 +95,7 @@ public class AwsApi {
     }
 
     public static String login(String login, String passwordHash) throws IOException, IllegalStateException{
-        String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/login?login=test@test.test&passwordHash=dasijioasdjijdsaijdsa",login,passwordHash);
+        String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/login?login=%s&passwordHash=%s",login,passwordHash);
         JsonObject json = new JsonObject();
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
@@ -175,7 +175,7 @@ public class AwsApi {
 
     public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {  //TODO change when itroduced singleton
         try {
-            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",userID,passwordHash);
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",id,passwordHash);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();

@@ -19,7 +19,7 @@ public class AwsApiGetTest {
     @Test
     public void loginTest() throws IOException{
         String result = AwsApi.login("test.test","dasijioasdjijdsaijdsa");
-        assertEquals("1",result);
+        assertEquals("3",result);
     }
     @Test
     public void getAllUsersTest() throws IOException{

@@ -67,5 +67,36 @@ class AwsApisAsyncWrapper (context: Context){
         }
 
     }
+    class loginAsync: AsyncTask<Pair<String,String>, Int, String>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg arg: Pair<String, String>): String? {
+            Log.v("REST_login",arg[0].toString())
+            Log.v("REST_login", arg[0].first.toString())
+            return AwsApi.login(arg[0].first,arg[0].second)
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: String?) {
+            //showNotification("Downloaded $result bytes")
+            Log.v("REST_login", "Logged in")
+        }
+
+    }
+    class getLoggedUserAsync : AsyncTask<Pair<String,String>, Int, User>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg arg: Pair<String, String>): User? {
+            Log.v("REST_getUser", arg[0].first)
+            return AwsApi.getUser(arg[0].first,arg[0].second)
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: User?) {
+            //showNotification("Downloaded $result bytes")
+            Log.v("REST_getUser", "Got user info from server")
+        }
+
+    }
 }
 

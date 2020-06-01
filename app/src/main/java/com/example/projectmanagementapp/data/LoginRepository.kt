@@ -1,10 +1,8 @@
 package com.example.projectmanagementapp.data
 
-import android.content.Context
-import androidx.preference.PreferenceManager
 import com.example.projectmanagementapp.AwsAPI.AwsApi
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.data.model.LoggedInUser
-import java.lang.Exception
 import java.security.MessageDigest
 
 /**
@@ -29,19 +27,19 @@ class LoginRepository() {
         user = null
     }
 
-    fun login(username: String, password: String): LoggedInUser? {
+    fun login(login: String, password: String): LoggedInUser? {
         // handle login
         val hash = getHash(password)
         try {
-            val id = AwsApi.login("test@test.test", "dasijioasdjijdsaijdsa")
-            if (id == null)
+            val result = AwsApisAsyncWrapper.loginAsync().execute(Pair(login, hash)).get()
+            if (result == null)
             {
                 throw Exception("Invalid operation")
             }
             else
             {
-                val user  = AwsApi.getUser(id,hash)
-                val loggedInUser = LoggedInUser(user.id, user.name,hash)
+                val user  = AwsApisAsyncWrapper.getLoggedUserAsync().execute(Pair(result, hash)).get()
+                val loggedInUser = LoggedInUser(result, user.name,hash)
                 setLoggedInUser(loggedInUser)
                 return loggedInUser
             }
@@ -51,16 +49,17 @@ class LoginRepository() {
             //TODO handle exception
         }
         return null
-        //  val user =  LoggedInUser("3","JaneDoe", "dasijioasdjijdsaijdsa")
-        //setLoggedInUser(user)
-        //return user
     }
 
     private fun getHash(password: String): String {
-        val bytes = MessageDigest
-            .getInstance("SHA")
-            .digest(password.toByteArray())
-        return bytes.toString()
+        val digest = MessageDigest.getInstance("SHA-1")
+        val result = digest.digest(password.toByteArray(Charsets.UTF_8))
+        val sb = StringBuilder()
+        for (b in result) {
+            sb.append(String.format("%02X", b))
+        }
+        val hashedString = sb.toString()
+        return hashedString
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
