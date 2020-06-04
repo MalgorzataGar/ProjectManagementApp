@@ -340,6 +340,7 @@ public class AwsApi {
                 .build();
         Response res = getHttpClient().newCall(request).execute();
         if (res!=null){
+            Clog.log("REST_postTeam","Response "+res.toString());
             System.out.println(res.body().string());
             return res.code();
         }

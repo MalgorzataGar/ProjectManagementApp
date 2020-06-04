@@ -11,9 +11,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.projectmanagementapp.R
 import android.app.AlertDialog
 import android.widget.*
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.loadPreference
 
 class AddGroupFragment : Fragment(){
@@ -36,14 +38,17 @@ class AddGroupFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Clog.log("enter add Group Fragment")
         addGroupViewModel =
             ViewModelProviders.of(this).get(AddGroupViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addgroup, container, false)
 
         addGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // TODO user delete it
+        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         initializeData()
         setButtonListeners()
         return root
@@ -60,15 +65,19 @@ class AddGroupFragment : Fragment(){
         val membersButton: Button = root.findViewById(R.id.membersButton)
         val tasksButton : Button = root.findViewById(R.id.taskButton)
         submitButton.setOnClickListener {
+            Clog.log("submint button was pressed")
             SubmitUpdate();
         }
         cancelButton.setOnClickListener {
+            Clog.log("cancel button was pressed")
             ClearPage();
         }
         membersButton.setOnClickListener {
+            Clog.log("chose member in add group")
             EditMembersList();
         }
         tasksButton.setOnClickListener {
+            Clog.log("chose task in add group")
             EditTasksList();
         }
     }
@@ -128,7 +137,8 @@ class AddGroupFragment : Fragment(){
         var usersIds = getSelectedUsersIds()
         //ToDo use members!!!
         var newTeam = Team(id,nameText.text.toString(),groupIdText.text.toString(),tasksIds)
-        //add team
+        AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash)))
+
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
     }

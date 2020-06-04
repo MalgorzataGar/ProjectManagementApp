@@ -1,5 +1,6 @@
 package com.example.projectmanagementapp.data.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ public class Team {
         this.groupName = groupName;
         this.ID = ID;
         this.taskIDs = taskIDs;
+        usersIDs.add(adminID);
         this.usersIDs = usersIDs;
     }
     public Team(String adminID, String groupName, String ID, List<String> taskIDs) {
@@ -43,6 +45,8 @@ public class Team {
         this.groupName = groupName;
         this.ID = ID;
         this.taskIDs = taskIDs;
+        this.usersIDs = new ArrayList<String>();
+        usersIDs.add(adminID);
     }
 
     public boolean equals(Team otherTeam){
