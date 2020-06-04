@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Clog.log("CUSTOM","first log in main")
+        Clog.log("-------------- first log in main -------------------")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getSampleRESTRequest(){
-        Clog.log("CUSTOM","firs log in main")
+        Clog.log("firs log in main")
     }
     // TODO przechowywać hasha hasła i singleton id użytkownika
 }

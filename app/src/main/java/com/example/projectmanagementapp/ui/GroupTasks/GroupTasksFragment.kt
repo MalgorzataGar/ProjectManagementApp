@@ -71,29 +71,41 @@ class GroupTasksFragment : Fragment() {
 
     private fun initView(){
         setUpAdapter()
-        //initGroups()
-        initializeRecyclerView()
         //id = loadPreference(this.context,"Id") as String
         //hash = loadPreference(this.context,"PasswordHash") as String
         id = "1" // TODO user delete it
         hash = "dasijioasdjijdsaijdsa" // TODO user delete it
-        getTaskList(group = "")
-        setUpGroups()
+        groupList = arrayListOf<Team>()
+
+        initGroups()
+        initializeRecyclerView()
+        Clog.log("initialize Groups and recycleview")
+
+        if (!groupList.isEmpty()) {
+            getTaskList(groupName = "")
+            setUpGroups()
+        }
         setFilterListener()
     }
 
     private fun initGroups() {
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id,hash).get()
+        Clog.log("user groups: "+user.groupIDs.joinToString(" "))
         for( groupid in user.groupIDs)
         {
-            groupList.add(AwsApi.getTeam(groupid,user.id,user.passwordHash))
+            val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
+            if (team.groupName != null)
+                groupList.add(AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get())
+            // TODO if group is null (group deleted) - remove groupID from user data
         }
+        Clog.log("groups: "+groupList.joinToString (" "))
     }
 
 
     private fun setFilterListener() {
     val filterButton: Button = rootView.findViewById(R.id.applyButton)
     filterButton.setOnClickListener {
+        Clog.log("Apply filter for groups was activated")
         filtrTasks()
     }
 }
@@ -102,19 +114,19 @@ class GroupTasksFragment : Fragment() {
         val selected = groupSpinner.selectedItem.toString()
         if(selected != "All")
         {
-            getTaskList(group = selected)
+            getTaskList(groupName = selected)
         }
         else
         {
-            getTaskList(group = "")
+            getTaskList(groupName = "")
         }
 
     }
 
     private fun setUpGroups() {
         val group: Spinner = rootView.findViewById(R.id.spinnerGroup)
-        //val list: MutableList<String> = GetUserGroupsNames()
-        val list : MutableList<String> = GetDummyGroupsNames()
+        val list: MutableList<String> = GetUserGroupsNames()
+        //val list : MutableList<String> = GetDummyGroupsNames()
         val dataAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             rootView.context,
             android.R.layout.simple_spinner_item, list
@@ -133,7 +145,7 @@ class GroupTasksFragment : Fragment() {
     }
     private fun GetUserGroupsNames(): MutableList<String> {
         val list  = java.util.ArrayList<String>()
-        list.add("All")
+        //list.add("All") // its have no sense in this case
         for(group in groupList)
         {
             list.add(group.groupName)
@@ -185,31 +197,59 @@ class GroupTasksFragment : Fragment() {
         list.add(task3)
         adapter.addItems(list)
     }
-    private fun getTaskList(group : String?)
+    private fun getTaskList(groupName : String?)
     {
         Log.v("GroupTaskFragment","Enter getTaskList()")
         adapter.clear()
-        //var groupId = groupList.find{it.groupName == group}
 
-        //user analis
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
-        Log.v("GroupTaskFragment",user.toString())
-        var list: ArrayList<Task> = ArrayList<Task>()
+        var groupId: Team;
+        if (groupName == ""){
+            if (groupList.isEmpty())
+                return;
+            else
+                groupId = groupList[0]
+        }
+        else {
+            groupId = groupList.find { it.groupName == groupName } ?: return // retrun if null
+        }
+        Clog.log("in use groupID $groupId")
+
+        //user analise
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id,hash).get()
+        Clog.log("user to get group tasks $user")
+
+        var tasksList: ArrayList<Task> = ArrayList<Task>()
+
+        val groupTaskIDsList = groupId.taskIDs
+        for (taskId in groupTaskIDsList){
+            val task:Task? = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId, id, hash).get()
+
+            if (task!=null)
+                if (task.taskName!="") {
+                    tasksList.add(task)
+                    Clog.log("task added to list: $task")
+                    continue
+                }
+            Clog.log("task was not added to list - taskID: $taskId")
+            //TODO - delete id from groupTasks if task return null
+        }
+        // bellow code to show all user tasks in group, above show all tasks in group
+        /*
         var taskIdList: ArrayList<String> = ArrayList()
         taskIdList.addAll(user.taskIDs)
         /*for(groupid in user.groupIDs)
         {
             taskIdList.addAll(AwsApi.getTeam(groupid).taskIDs)
         }*/
-        if(!group.isNullOrEmpty())
+        if(!groupName.isNullOrEmpty())
         {
             for (taskId in taskIdList) //TODO do analizy
             {
                 val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
                 /*if (task.groupID == groupId && task.taskName != null) {
-                    list.add(task)
+                    tasksList.add(task)
                 }*/
-                list.add(task)
+                tasksList.add(task)
             }
         }
         else
@@ -219,11 +259,12 @@ class GroupTasksFragment : Fragment() {
                 val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
                 if(task.taskName != null)
                 {
-                    list.add(task)
+                    tasksList.add(task)
                 }
 
             }
-        }
-        adapter.addItems(list)
+        }*/
+        adapter.addItems(tasksList)
+        Clog.log("task list added to adapter")
     }
 }

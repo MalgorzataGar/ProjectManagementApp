@@ -146,14 +146,14 @@ class MyTasksFragment : Fragment() {
     private fun getTaskList(priority : String?)
     {
 
-        Clog.log("CUSTOM", "Enter getTaskList() with userID:$id and priority: $priority")
+        Clog.log( "Enter getTaskList() with userID:$id and priority: $priority")
         adapter.clear()
         //user analise
         val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id,hash).get()
         if (user!=null)
-            Clog.log("CUSTOM", user.toString())
+            Clog.log( user.toString())
         else
-            Clog.log("CUSTOM", "retrieve empty user")
+            Clog.log( "retrieve empty user")
 
         var list: ArrayList<Task> = ArrayList<Task>()
 
@@ -163,7 +163,7 @@ class MyTasksFragment : Fragment() {
             val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId,user.ID, hash).get()
             if ((task.priority == priority || priority=="All")
                 && task.taskName != null) {
-                Clog.log("CUSTOM", "task added to list of myTasks "+task.toString())
+                Clog.log( "task added to list of myTasks "+task.toString())
                 list.add(task)
             }
         }

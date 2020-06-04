@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.projectmanagementapp.data.model.Task;
 import com.example.projectmanagementapp.data.model.Team;
 import com.example.projectmanagementapp.data.model.User;
+import com.example.projectmanagementapp.extensions.Clog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -124,7 +125,7 @@ public class AwsApi {
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 //System.out.println(body);
                 JsonParser parser = new JsonParser();
@@ -152,7 +153,7 @@ public class AwsApi {
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 System.out.println(body);
                 JsonParser parser = new JsonParser();
@@ -179,7 +180,7 @@ public class AwsApi {
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 User user = json2obj(body, User.class);
                 return user;
@@ -202,14 +203,14 @@ public class AwsApi {
     public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getTask?taskID=%s&userID=%s&passwordHash=%s",id, userID, passwordHash);
-            Log.v("REST", address);
+            Clog.log("REST_TASK", address);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
-               Log.v("REST_TASK","get task"+body);
+               Clog.log("REST_TASK","get task"+body);
                Task task = json2obj(body,Task.class);
-               Log.v("REST_TASK","Created task "+task.toString());
+               Clog.log("REST_TASK","Created task "+task.toString());
                return task;
             } else {
                 return null;
@@ -228,13 +229,17 @@ public class AwsApi {
     //public static Team getTeam(String id) throws IOException, IllegalStateException{ //TODO
     public static Team getTeam(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
+            Clog.log( "enter getTeam");
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/GroupData?groupID=%s&userID=%s&passwordHash=%s", id,userID,passwordHash);
+            Clog.log("REST_TEAM", address);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
+                Clog.log("REST_TEAM","get team "+body);
                 System.out.println(body.toString());
                 Team group = json2obj(body,Team.class);
+                Clog.log("REST_TEAM","Created task "+group.toString());
                 return group;
             } else {
                 return null;
@@ -302,7 +307,7 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
-        Log.v("REST_postTask","Response "+res.toString());
+        Clog.log("REST_postTask","Response "+res.toString());
         if (res!=null){
             System.out.println(res.body().string());
             return res.code();

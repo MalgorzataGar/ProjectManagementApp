@@ -12,10 +12,17 @@ public class Clog {
         final String info = stackTrace.getMethodName() + " (" + fileName + ":"
                 + stackTrace.getLineNumber() + ")";
 
-        Log.i(tag, info + ": " + msg);
+        Log.i("CUSTOM "+tag, info + ": " + msg);
     }
     public static void log(final String msg) {
-        final String default_tag = "CUSTOM";
-        log(default_tag, msg);
+        final StackTraceElement stackTrace = new Exception().getStackTrace()[1];
+
+        String fileName = stackTrace.getFileName();
+        if (fileName == null) fileName="";
+
+        final String info = stackTrace.getMethodName() + " (" + fileName + ":"
+                + stackTrace.getLineNumber() + ")";
+
+        Log.i("CUSTOM ", info + ": " + msg);
     }
 }

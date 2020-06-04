@@ -159,7 +159,7 @@ class AddTaskFragment : Fragment() {
     }
 
     private fun SubmitTask() {
-        Clog.log("CUSTOM","Submit Task was chosen, userID: $id, hash: $hash")
+        Clog.log("Submit Task was chosen, userID: $id, hash: $hash")
         val taskID = "13" //TODO replace with id handling
         val priorityDropdown: Spinner = root.findViewById(R.id.taskPriority)
         val executor: Spinner = root.findViewById(R.id.taskExecutor)
@@ -171,7 +171,7 @@ class AddTaskFragment : Fragment() {
         val task = Task(id, date, getExecutorId(executor.selectedItem.toString()),
             getGroupId(group.selectedItem.toString()), taskID, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
-        Clog.log("CUSTOM", "Task object was created: $task")
+        Clog.log( "Task object was created: $task")
 
         postOrUpdateTaskAsync().execute(Pair(Pair(task,false), Pair(id,hash))) //TODO if update task - create handling for true
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()

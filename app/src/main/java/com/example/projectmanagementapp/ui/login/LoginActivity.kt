@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Clog.log("CUSTOM","entered on create for login activity")
+        Clog.log("entered on create for login activity")
 
         setContentView(R.layout.activity_login)
         checkIfUserIsLoged()
@@ -65,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                Clog.log("CUSTOM","preferences (id,passwordhash,name) was saved")
+                Clog.log("preferences (id,passwordhash,name) was saved")
                 updateUiWithUser(loginResult.success)
                 savePreference(this.applicationContext,"Name",loginResult.success.displayName)
                 savePreference(this.applicationContext,"Id","1") // TODO user replace with loaded value
