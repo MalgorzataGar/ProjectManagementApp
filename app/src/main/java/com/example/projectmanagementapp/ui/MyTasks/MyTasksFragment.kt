@@ -1,12 +1,10 @@
 package com.example.projectmanagementapp.ui.MyTasks
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
 import androidx.core.os.bundleOf
@@ -15,14 +13,12 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.OnItemClickListener
-import com.example.projectmanagementapp.extensions.loadPreference
-import com.example.projectmanagementapp.ui.TaskView.TaskFragment
 
 class MyTasksFragment : Fragment() {
 
@@ -49,8 +45,10 @@ class MyTasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onCreateComponent()
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // todo user delete it
+        hash = "dasijioasdjijdsaijdsa" // todo user delete it
     }
 
     private fun onCreateComponent() {
@@ -68,7 +66,7 @@ class MyTasksFragment : Fragment() {
         initializeRecyclerView()
         //setUpDummyData
         //TODO add loading screen (eg. spining circle) - to long time to load all tasks
-        getTaskList("")
+        getTaskList("All")
         setAddTaskButton()
         setFilterListener()
     }
@@ -82,14 +80,8 @@ class MyTasksFragment : Fragment() {
 
     private fun filtrTasks() {
         val priority : Spinner = rootView.findViewById(R.id.taskPriority)
-        if(priority.selectedItem.toString() != "All")
-        {
-            getTaskList(priority = priority.selectedItem.toString())
-        }
-        else
-        {
-            getTaskList(priority = "")
-        }
+        Clog.log("Priority set to: $priority")
+        getTaskList(priority = priority.selectedItem.toString())
     }
 
     private fun setAddTaskButton() {
@@ -154,42 +146,30 @@ class MyTasksFragment : Fragment() {
     private fun getTaskList(priority : String?)
     {
 
-        Log.v("MyTaskFragment","Enter getTaskList()")
+        Clog.log("CUSTOM", "Enter getTaskList() with userID:$id and priority: $priority")
         adapter.clear()
         //user analise
-        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id).get()
-        Log.v("MyTaskFragment",user.toString())
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id,hash).get()
+        if (user!=null)
+            Clog.log("CUSTOM", user.toString())
+        else
+            Clog.log("CUSTOM", "retrieve empty user")
 
         var list: ArrayList<Task> = ArrayList<Task>()
-        if(!priority.isNullOrEmpty())
+
+        for (taskId in user.taskIDs)
         {
-            /*for (taskID in user.getTaskIDs()) {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskID).get()
+            Clog.log("$priority analise task id: $taskId")
+            val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId,user.ID, hash).get()
+            if ((task.priority == priority || priority=="All")
+                && task.taskName != null) {
+                Clog.log("CUSTOM", "task added to list of myTasks "+task.toString())
                 list.add(task)
-                Log.v("MyTaskFragment", task.toString())
-            }
-
-            Log.v("MyTaskFragment","list of tasks created")*/
-            for (taskId in user.taskIDs) //TODO do analizy
-            {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
-                if (task.priority == priority && task.taskName != null) {
-                    list.add(task)
-                }
             }
         }
-        else
-        {
-            for (taskId in user.taskIDs)
-            {
-                val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId).get()
-                if(task.taskName != null)
-                {
-                    list.add(task)
-                }
 
-            }
-        }
+
+        Clog.log("list of tasks: $list")
         adapter.addItems(list)
     }
 

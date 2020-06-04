@@ -25,6 +25,7 @@ import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.OnItemClickListener
 import com.example.projectmanagementapp.extensions.loadPreference
 import com.example.projectmanagementapp.ui.TaskView.TaskFragment
@@ -53,6 +54,7 @@ class GroupTasksFragment : Fragment() {
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+        Clog.log("Enter into Group task fragment")
         super.onCreate(savedInstanceState)
         onCreateComponent()
     }
@@ -71,8 +73,10 @@ class GroupTasksFragment : Fragment() {
         setUpAdapter()
         //initGroups()
         initializeRecyclerView()
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // TODO user delete it
+        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         getTaskList(group = "")
         setUpGroups()
         setFilterListener()

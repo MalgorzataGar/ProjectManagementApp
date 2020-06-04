@@ -17,6 +17,7 @@ import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper.postOrUpdateTaskAsync
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.loadPreference
 import java.util.*
 
@@ -38,8 +39,10 @@ class AddTaskFragment : Fragment() {
         addTaskViewModel =
                 ViewModelProviders.of(this).get(AddTaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // TODO user delete it
+        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
 
         setGroups()
         setExecutors()
@@ -80,10 +83,13 @@ class AddTaskFragment : Fragment() {
         val submitButton: Button = root.findViewById(R.id.submitButton)
         val cancelButton: Button = root.findViewById(R.id.cancelButton)
         submitButton.setOnClickListener {
-            SubmitTask();
+            Clog.log("submit button pressed")
+            subimtTaskWrapper()
         }
         cancelButton.setOnClickListener {
-            ClearPage();
+            Clog.log("cancel button pressed")
+            fragmentManager?.popBackStack() // TODO  replace - cause error when reload fragment
+            //ClearPage();
         }
     }
 
@@ -153,7 +159,7 @@ class AddTaskFragment : Fragment() {
     }
 
     private fun SubmitTask() {
-        Log.v("AddTaskFragment","Submit Task was chosen")
+        Clog.log("CUSTOM","Submit Task was chosen, userID: $id, hash: $hash")
         val taskID = "13" //TODO replace with id handling
         val priorityDropdown: Spinner = root.findViewById(R.id.taskPriority)
         val executor: Spinner = root.findViewById(R.id.taskExecutor)
@@ -161,15 +167,24 @@ class AddTaskFragment : Fragment() {
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
 
-        val task =  Task(id, editDate.text.toString(), getExecutorId(executor.selectedItem.toString()),
+        val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else "" //todo check if cause db error
+        val task = Task(id, date, getExecutorId(executor.selectedItem.toString()),
             getGroupId(group.selectedItem.toString()), taskID, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
-        Log.v("AddTaskFragment", "Task object was created: $task")
+        Clog.log("CUSTOM", "Task object was created: $task")
 
-        postOrUpdateTaskAsync().execute(Pair(task,false)) //TODO if update task - create handling for true
+        postOrUpdateTaskAsync().execute(Pair(Pair(task,false), Pair(id,hash))) //TODO if update task - create handling for true
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
         //TODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)
+    }
+
+    private fun subimtTaskWrapper(){ // ensure task name is not null
+        val nameTextView: TextView = root.findViewById(R.id.taskName)
+        if (nameTextView.text.toString()!="")
+            SubmitTask()
+        else
+            Toast.makeText(root.context,"Task name cannot be empty",Toast.LENGTH_SHORT).show()
     }
 
     private fun getExecutorId(toString: String): MutableList<String> {
