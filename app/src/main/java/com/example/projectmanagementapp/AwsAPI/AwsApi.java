@@ -239,7 +239,7 @@ public class AwsApi {
                 Clog.log("REST_TEAM","get team "+body);
                 System.out.println(body.toString());
                 Team group = json2obj(body,Team.class);
-                Clog.log("REST_TEAM","Created task "+group.toString());
+                Clog.log("REST_TEAM","Created team from received data "+group.toString());
                 return group;
             } else {
                 return null;
@@ -332,6 +332,7 @@ public class AwsApi {
         json.addProperty("usersIDs",group.getUsersIDs().toString());
 
         System.out.println(json.toString());
+        Clog.log("REST_postTeam",url);
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -340,7 +341,7 @@ public class AwsApi {
                 .build();
         Response res = getHttpClient().newCall(request).execute();
         if (res!=null){
-            Clog.log("REST_postTeam","Response "+res.toString());
+            Clog.log("REST_postTeam",res.toString());
             System.out.println(res.body().string());
             return res.code();
         }

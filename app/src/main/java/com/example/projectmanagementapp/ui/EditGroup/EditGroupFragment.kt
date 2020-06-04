@@ -9,9 +9,11 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.loadPreference
 
 class EditGroupFragment : Fragment(){
@@ -20,7 +22,8 @@ class EditGroupFragment : Fragment(){
     private lateinit var id: String
     private lateinit var hash: String
     private lateinit var groups : ArrayList<Team>
-    private lateinit var selectedGroup : Team
+    private var adminTeams : ArrayList<Team> = ArrayList()
+    private var selectedGroup : Team? = null
     private lateinit var users : ArrayList<User>
     private lateinit var usersNames : Array<CharSequence>
     private  var selectedMembers: ArrayList<CharSequence> = ArrayList<CharSequence>()
@@ -32,11 +35,14 @@ class EditGroupFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Clog.log("Enter edit group fragment")
         editGroupViewModel =
             ViewModelProviders.of(this).get(EditGroupViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_editgroup, container, false)
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // TODO user delete it
+        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
         setGroups()
@@ -54,8 +60,8 @@ class EditGroupFragment : Fragment(){
 
     private fun setGroupsSpinner() {
         val groups: Spinner = root.findViewById(R.id.groupToEdit)
-        //val list: MutableList<String> = GetGroupNames()
-        val list : MutableList<String> = GetDummyGroups()
+        val list: MutableList<String> = GetAdminGroupNames()
+        //val list : MutableList<String> = GetDummyGroups()
         val dataAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             root.context,
             android.R.layout.simple_spinner_item, list
@@ -73,12 +79,15 @@ class EditGroupFragment : Fragment(){
             ChooseGroup()
         }
         submitButton.setOnClickListener {
+            Clog.log("submit Button pressed")
             SubmitUpdate();
         }
         cancelButton.setOnClickListener {
+            Clog.log("cancel Button pressed")
             ClearPage();
         }
         membersButton.setOnClickListener {
+            Clog.log("Edit member clicked")
             EditMembersList();
         }
     }
@@ -104,7 +113,7 @@ class EditGroupFragment : Fragment(){
             checkedMembers[i] = false
         }
         canChooseMembers = true
-
+        selectedGroup = group
     }
     private fun EditMembersList(){
         if(canChooseMembers)
@@ -149,9 +158,31 @@ class EditGroupFragment : Fragment(){
         var nameText : EditText = root.findViewById(R.id.nameEdit)
         var adminText : EditText = root.findViewById(R.id.adminEdit)
         var usersIds = getSelectedUsersIds()
+        val groupSpinner : Spinner = root.findViewById(R.id.groupToEdit)
+        val selectedTeamName = groupSpinner.selectedItem.toString()
+        Clog.log("Selected team name: $selectedTeamName")
+
+        if(nameText.toString()==""){
+            Toast.makeText(root.context,"Group name cannot be empty",Toast.LENGTH_SHORT).show()
+            return;
+        }
 
         //update group and save
-        Toast.makeText(root.context,"Updated",Toast.LENGTH_SHORT).show()
+        var team = adminTeams.find{x-> x.groupName == selectedTeamName}
+        Clog.log("selected team: $team")
+        if (team != null) {
+            team.groupName = nameText.text.toString()
+            team.adminID = adminText.text.toString()
+            //todo members
+            if(!team.usersIDs.contains(team.adminID))
+                team.usersIDs.add(team.adminID)
+            Clog.log("Change team values to: $team")
+            AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(team,true),Pair(id,hash)))
+            Toast.makeText(root.context,"Updated",Toast.LENGTH_SHORT).show()
+        } else{
+            Toast.makeText(root.context,"Error",Toast.LENGTH_SHORT).show()
+            Clog.log("Unknown error")
+        }
         ClearPage()
     }
     private fun getSelectedUsersIds(): ArrayList<String> {
@@ -206,6 +237,25 @@ class EditGroupFragment : Fragment(){
         list.add("Elektronika")
         list.add("Marketing")
         return list
+    }
+
+    private fun GetAdminGroupNames(): MutableList<String> {
+        val user : User = AwsApisAsyncWrapper.getUserAsync().execute(id,hash).get()
+        val groupList :MutableList<String> = ArrayList()
+        Clog.log("user groups: "+user.groupIDs.joinToString(" "))
+        for( groupid in user.groupIDs)
+        {
+            val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
+            if (team.groupName != null)
+                if(team.getAdminID()==id) {
+                    groupList.add(team.groupName)
+                    //groups.add(team)
+                    adminTeams.add(team)
+                }
+            // TODO if group is null (group deleted) - remove groupID from user data
+        }
+        Clog.log("groups: "+groupList.joinToString (" "))
+        return groupList
     }
 
 }

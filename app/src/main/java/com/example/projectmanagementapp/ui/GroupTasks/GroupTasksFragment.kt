@@ -95,7 +95,7 @@ class GroupTasksFragment : Fragment() {
         {
             val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
             if (team.groupName != null)
-                groupList.add(AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get())
+                groupList.add(team)
             // TODO if group is null (group deleted) - remove groupID from user data
         }
         Clog.log("groups: "+groupList.joinToString (" "))
