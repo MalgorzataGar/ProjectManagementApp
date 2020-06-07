@@ -332,7 +332,7 @@ public class AwsApi {
     }
 
     //public static void postOrUpdateTask(Task task, boolean updateTask) throws JSONException, IOException { //TODO
-    public static int postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
+    public static String postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -357,18 +357,21 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
+        String bod = res.body().string();
         Log.v("REST_postTask","Response "+res.toString());
         if (res!=null){
-            System.out.println(res.body().string());
-            return res.code();
+            System.out.println(bod);
+            JsonParser parser = new JsonParser();
+            JsonObject tasks = (JsonObject) parser.parse(bod);
+            return tasks.get("taskID").toString();
         }
         else{
-            return -1;
+            return "-1";
         }
     }
 
     //public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
-    public static int postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
+    public static String postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createGroup";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -389,12 +392,15 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
+        String bod = res.body().string();
         if (res!=null){
-            System.out.println(res.body().string());
-            return res.code();
+            System.out.println(bod);
+            JsonParser parser = new JsonParser();
+            JsonObject groups = (JsonObject) parser.parse(bod);
+            return groups.get("groupID").toString();
         }
         else{
-            return -1;
+            return "-1";
         }
     }
 
