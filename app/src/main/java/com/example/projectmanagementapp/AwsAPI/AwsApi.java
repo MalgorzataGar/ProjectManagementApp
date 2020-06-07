@@ -173,6 +173,33 @@ public class AwsApi {
 
     }
 
+    public static JsonObject getAllTasks(String userID, String passwordHash) throws IOException, IllegalStateException{
+        try {
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getAllTasks?userID=%s&passwordHash=%s",userID,passwordHash);
+            Request request = new Request.Builder().url(address).get().build();
+            Response response = getHttpClient().newCall(request).execute();
+            String body = response.body().string();
+            Log.v("REST_USER",body);
+            if (body != null) {
+                System.out.println(body);
+                JsonParser parser = new JsonParser();
+                JsonObject groups = (JsonObject) parser.parse(body);
+                return groups;
+            } else {
+                return null;
+            }
+        }
+        catch(IllegalStateException e){
+            System.out.println(e);
+            return null;
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
     public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {  //TODO change when itroduced singleton
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",id,passwordHash);
@@ -181,6 +208,32 @@ public class AwsApi {
             String body = response.body().string();
             Log.v("REST_USER",body);
             if (body != null) {
+                User user = json2obj(body, User.class);
+                return user;
+            } else {
+                return null;
+            }
+        }
+        catch(IllegalStateException e){
+            System.out.println(e);
+            return null;
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
+    public static User getExternalUser(String userToGetID, String id, String passwordHash) throws IOException, IllegalStateException {  //TODO change when itroduced singleton
+        try {
+            String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getExternalUser?getID=%s&userID=%s&passwordHash=%s",userToGetID,id,passwordHash);
+            Request request = new Request.Builder().url(address).get().build();
+            Response response = getHttpClient().newCall(request).execute();
+            String body = response.body().string();
+            Log.v("REST_USER",body);
+            if (body != null) {
+                System.out.println(body);
                 User user = json2obj(body, User.class);
                 return user;
             } else {

@@ -16,6 +16,18 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class AwsApiGetTest {
+
+    @Test
+    public void getExternalUserTest() throws IOException{
+        List<String> groupIDs = new ArrayList();
+        //groupIDs.add("3");
+        List<String> taskIDs = new ArrayList();
+
+        User user = new User(groupIDs,"AutTest",taskIDs,"14","AutTestName","asdfgqwerty");
+        User result = AwsApi.getExternalUser("14","1","dasijioasdjijdsaijdsa");
+        assertEquals(true,user.equals(result));
+    }
+
     @Test
     public void loginTest() throws IOException{
         String result = AwsApi.login("test.test","dasijioasdjijdsaijdsa");
@@ -30,6 +42,12 @@ public class AwsApiGetTest {
     @Test
     public void getAllGroupsTest() throws IOException{
         JsonObject result = AwsApi.getAllGroups("1","dasijioasdjijdsaijdsa");
+        assertEquals(JsonObject.class,result.getClass());
+    }
+
+    @Test
+    public void getAllTasksTest() throws IOException{
+        JsonObject result = AwsApi.getAllTasks("1","dasijioasdjijdsaijdsa");
         assertEquals(JsonObject.class,result.getClass());
     }
 
