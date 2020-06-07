@@ -83,7 +83,16 @@ class TaskFragment : Fragment() {
 
     private fun DeleteTask() {
         AwsApisAsyncWrapper.deleteTaskAsync().execute(task.ID, id, hash).get()
-        //TODO: UPDATE EXECUTOR AND GROUP
+        val group = GetGroupByID(task.groupID)
+        val executor = GetExecutorById(task.executorsIDs.first())
+        if (group.taskIDs != null && group.taskIDs.contains(task.ID)) {
+            group.taskIDs.remove(task.ID)
+            AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(group,true), Pair(id,hash))).get()
+        }
+        if (executor?.taskIDs != null && executor.taskIDs.contains(task.ID)) {
+            executor.taskIDs.remove(task.ID)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(executor).get()
+        }
         navController?.navigateUp()
     }
 
@@ -132,14 +141,12 @@ class TaskFragment : Fragment() {
     }
 
     private fun GetExecutorById(executorID: String?): User? {
-        //TODO: get external user!!
-        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(executorID, hash).get()
+        val user: User = AwsApisAsyncWrapper.getExternalUserAsync().execute(executorID,id, hash).get()
         return user
     }
 
     private fun GetCreatorById(creatorID: String?): User? {
-        //TODO: get external user!!
-        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(creatorID, hash).get()
+        val user: User = AwsApisAsyncWrapper.getExternalUserAsync().execute(creatorID,id, hash).get()
         return user
     }
 

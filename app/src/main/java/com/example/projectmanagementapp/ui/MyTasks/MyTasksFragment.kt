@@ -126,29 +126,6 @@ class MyTasksFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    private fun setUpDummyData() {
-        adapter.clear()
-        var list: ArrayList<Task> = ArrayList<Task>()
-        var task1 = Task()
-        task1.taskName = "Taks1"
-        task1.priority = "normal"
-        task1.state = "new"
-        task1.ID = "1"
-        var task2 = Task()
-        task2.taskName = "Taks2"
-        task2.ID = "2"
-        task2.priority = "minor"
-        task2.state = "inprogress"
-        var task3 = Task()
-        task3.taskName = "Taks3"
-        task3.ID = "3"
-        task3.priority = "major"
-        task3.state = "done"
-        list.add(task1)
-        list.add(task2)
-        list.add(task3)
-        adapter.addItems(list)
-    }
 
     private fun getTaskList(priority: String?) {
         Clog.log("Enter getTaskList() with userID:$id and priority: $priority")

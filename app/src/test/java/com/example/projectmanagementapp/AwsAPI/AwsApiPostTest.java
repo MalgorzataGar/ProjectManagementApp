@@ -43,8 +43,8 @@ public class AwsApiPostTest {
         List<String> ids = new ArrayList();
         ids.add("1");
         ids.add("2");
-        Team team = new Team("2","Android test name","163501",ids,ids);
-        int result = AwsApi.postOrUpdateGroup(team,true,"2","dasijioasdjijdsaijdsa");
+        Team team = new Team("2","Android test name","093308",ids,ids);
+        int result = AwsApi.postOrUpdateGroup(team,true,"1","dasijioasdjijdsaijdsa");
         assertEquals(200,result);
     }
 }

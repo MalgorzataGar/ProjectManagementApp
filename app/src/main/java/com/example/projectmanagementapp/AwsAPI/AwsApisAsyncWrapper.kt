@@ -46,6 +46,21 @@ class AwsApisAsyncWrapper (){
         }
 
     }
+    class getExternalUserAsync : AsyncTask<String, Int, User>() {
+
+        // Do the long-running work in here
+        override fun doInBackground(vararg idHash: String): User? {
+            Clog.log("REST", "idHash: "+idHash[0]+" hash: "+idHash[1])
+            return AwsApi.getExternalUser(idHash[0],idHash[1],idHash[2])
+        }
+
+        // This is called when doInBackground() is finished
+        override fun onPostExecute(result: User?) {
+            //showNotification("Downloaded $result bytes")
+            Clog.log("REST", "Got user info from server")
+        }
+
+    }
     class getAllUsersAsync : AsyncTask<String, Int, Map<String,String>>() {
 
         // Do the long-running work in here
