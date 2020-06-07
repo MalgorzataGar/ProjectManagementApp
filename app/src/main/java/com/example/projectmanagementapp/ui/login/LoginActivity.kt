@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager
 import com.example.projectmanagementapp.MainActivity
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.LoggedInUser
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.savePreference
 
 
@@ -29,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Clog.log("entered on create for login activity")
 
         setContentView(R.layout.activity_login)
         checkIfUserIsLoged()
@@ -63,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
+                Clog.log("preferences (id,passwordhash,name) was saved")
                 updateUiWithUser(loginResult.success)
                 savePreference(this.applicationContext,"Name",loginResult.success.displayName)
                 savePreference(this.applicationContext,"Id",loginResult.success.id)

@@ -5,7 +5,10 @@ import android.util.Log;
 import com.example.projectmanagementapp.data.model.Task;
 import com.example.projectmanagementapp.data.model.Team;
 import com.example.projectmanagementapp.data.model.User;
+import com.example.projectmanagementapp.extensions.Clog;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -15,6 +18,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.HostnameVerifier;
@@ -48,8 +58,8 @@ public class AwsApi {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private static String userID = "1"; //TODO replace with singleton
-    private static String passwordHash ="dasijioasdjijdsaijdsa"; //TODO replace with singleton
+    private static String userID = "1"; //TODO user replace with singleton
+    private static String passwordHash ="dasijioasdjijdsaijdsa"; //TODO user replace with singleton
 
 
     private static OkHttpClient getHttpClient() {//TODO
@@ -118,18 +128,22 @@ public class AwsApi {
         }
     }
 
-    public static JsonObject getAllUsers(String userID, String passwordHash) throws IOException, IllegalStateException{
+    public static Map<String,String> getAllUsers(String userID, String passwordHash) throws IOException, IllegalStateException{
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getAllUsers?userID=%s&passwordHash=%s",userID,passwordHash);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 //System.out.println(body);
                 JsonParser parser = new JsonParser();
-                JsonObject groups = (JsonObject) parser.parse(body);
-                return groups;
+                JsonObject users = (JsonObject) parser.parse(body);
+                Map<String,String> set = new HashMap<String, String>();
+                for (Map.Entry<String,JsonElement> entry : users.entrySet()) {
+                    set.put(entry.getKey(),entry.getValue().toString());
+                }
+                return set;
             } else {
                 return null;
             }
@@ -152,7 +166,7 @@ public class AwsApi {
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 System.out.println(body);
                 JsonParser parser = new JsonParser();
@@ -173,13 +187,13 @@ public class AwsApi {
 
     }
 
-    public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {  //TODO change when itroduced singleton
+    public static User getUser(String id, String passwordHash) throws IOException, IllegalStateException {
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getUserData?userID=%s&passwordHash=%s",id,passwordHash);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
-            Log.v("REST_USER",body);
+            Clog.log("REST_USER",body);
             if (body != null) {
                 User user = json2obj(body, User.class);
                 return user;
@@ -199,17 +213,17 @@ public class AwsApi {
     }
 
     //public static Task getTask(String id) throws IOException, IllegalStateException{
-    public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{ //TODO change when itroduce singleton
+    public static Task getTask(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/getTask?taskID=%s&userID=%s&passwordHash=%s",id, userID, passwordHash);
-            Log.v("REST", address);
+            Clog.log("REST_TASK", address);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
-               Log.v("REST_TASK","get task"+body);
+               Clog.log("REST_TASK","get task"+body);
                Task task = json2obj(body,Task.class);
-               Log.v("REST_TASK","Created task "+task.toString());
+               Clog.log("REST_TASK","Created task "+task.toString());
                return task;
             } else {
                 return null;
@@ -226,15 +240,19 @@ public class AwsApi {
     }
 
     //public static Team getTeam(String id) throws IOException, IllegalStateException{ //TODO
-    public static Team getTeam(String id,String userID,String passwordHash) throws IOException, IllegalStateException{  //TODO change when itroduced singleton
+    public static Team getTeam(String id,String userID,String passwordHash) throws IOException, IllegalStateException{
         try {
+            Clog.log( "enter getTeam");
             String address = String.format("https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/GroupData?groupID=%s&userID=%s&passwordHash=%s", id,userID,passwordHash);
+            Clog.log("REST_TEAM", address);
             Request request = new Request.Builder().url(address).get().build();
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
+                Clog.log("REST_TEAM","get team "+body);
                 System.out.println(body.toString());
                 Team group = json2obj(body,Team.class);
+                Clog.log("REST_TEAM","Created team from received data "+group.toString());
                 return group;
             } else {
                 return null;
@@ -277,7 +295,7 @@ public class AwsApi {
     }
 
     //public static void postOrUpdateTask(Task task, boolean updateTask) throws JSONException, IOException { //TODO
-    public static int postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
+    public static int postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -302,7 +320,7 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
-        Log.v("REST_postTask","Response "+res.toString());
+        Clog.log("REST_postTask","Response "+res.toString());
         if (res!=null){
             System.out.println(res.body().string());
             return res.code();
@@ -327,6 +345,7 @@ public class AwsApi {
         json.addProperty("usersIDs",group.getUsersIDs().toString());
 
         System.out.println(json.toString());
+        Clog.log("REST_postTeam",url);
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -335,6 +354,7 @@ public class AwsApi {
                 .build();
         Response res = getHttpClient().newCall(request).execute();
         if (res!=null){
+            Clog.log("REST_postTeam",res.toString());
             System.out.println(res.body().string());
             return res.code();
         }
@@ -365,7 +385,7 @@ public class AwsApi {
     }
 
     //public static void deleteTask(String taskID) throws IOException { //TODO
-    public static int deleteTask(String taskID, String userID, String passwordHash) throws IOException {  //TODO change when itroduce singleton
+    public static int deleteTask(String taskID, String userID, String passwordHash) throws IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/deleteTask";
         JsonObject json = new JsonObject();
         json.addProperty("taskID",taskID);

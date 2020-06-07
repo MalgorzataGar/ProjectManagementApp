@@ -10,10 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.projectmanagementapp.R
 import android.app.AlertDialog
+import android.util.Log
 import android.widget.*
+import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
+import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.loadPreference
 
 class AddGroupFragment : Fragment(){
@@ -21,11 +24,11 @@ class AddGroupFragment : Fragment(){
     private lateinit var root: View
     private lateinit var id: String
     private lateinit var hash: String
-    private lateinit var users : ArrayList<User>
+    private lateinit var users : Map<String,String>
     private lateinit var usersNames : Array<CharSequence>
     private  var selectedMembers: ArrayList<CharSequence> = ArrayList<CharSequence>()
     private lateinit var checkedMembers : BooleanArray
-    private lateinit var tasks : ArrayList<Task>
+    private  var tasks : ArrayList<Task> = ArrayList<Task>()
     private lateinit var tasksNames : Array<CharSequence>
     private  var selectedTasks: ArrayList<CharSequence> = ArrayList<CharSequence>()
     private lateinit var checkedTasks : BooleanArray
@@ -36,14 +39,17 @@ class AddGroupFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Clog.log("enter add Group Fragment")
         addGroupViewModel =
             ViewModelProviders.of(this).get(AddGroupViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addgroup, container, false)
 
         addGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // TODO user delete it
+        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         initializeData()
         setButtonListeners()
         return root
@@ -60,15 +66,19 @@ class AddGroupFragment : Fragment(){
         val membersButton: Button = root.findViewById(R.id.membersButton)
         val tasksButton : Button = root.findViewById(R.id.taskButton)
         submitButton.setOnClickListener {
+            Clog.log("submint button was pressed")
             SubmitUpdate();
         }
         cancelButton.setOnClickListener {
+            Clog.log("cancel button was pressed")
             ClearPage();
         }
         membersButton.setOnClickListener {
+            Clog.log("chose member in add group")
             EditMembersList();
         }
         tasksButton.setOnClickListener {
+            Clog.log("chose task in add group")
             EditTasksList();
         }
     }
@@ -126,9 +136,10 @@ class AddGroupFragment : Fragment(){
         var groupIdText : EditText = root.findViewById(R.id.groupIDEdit)
         var tasksIds = getSelectedTasksIds()
         var usersIds = getSelectedUsersIds()
-        //ToDo use members!!!
-        var newTeam = Team(id,nameText.text.toString(),groupIdText.text.toString(),tasksIds)
-        //add team
+        var newTeam = Team(id,nameText.text.toString(),groupIdText.text.toString(),tasksIds,usersIds)
+        AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash)))
+        //TODO: update users
+        //TODO: update this user because this is his group
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
     }
@@ -147,39 +158,45 @@ class AddGroupFragment : Fragment(){
         var usersIds = ArrayList<String>()
         for(memberName in selectedMembers.iterator())
         {
-            var user = users.find{x-> x.name == memberName}
-            if (user != null)
-                usersIds.add(user.ID)
+            for(user in users)
+            {
+                if(user.value == memberName)
+                    usersIds.add(user.key)
+            }
         }
         return usersIds
     }
 
     private fun setUsers() {
-        //val users =  AwsApi.GetUsers()
-        // save parameter
-        // }
-        usersNames = GetDummyNames()
+        Clog.log("Enter setUsers() with userID:$id ")
+        var usersNamesList = ArrayList<String>()
+        users = AwsApisAsyncWrapper.getAllUsersAsync().execute(id,hash).get()
+        for(user in users)
+        {
+            usersNamesList.add(user.value)
+        }
+        usersNames = usersNamesList.toTypedArray<CharSequence>()
         checkedMembers = BooleanArray(usersNames.size)
-        initCheckedList(usersNames.size, checkedMembers)
+        initCheckedList(usersNames.size,checkedMembers)
+    }
 
-    }
-    private fun GetDummyNames():  Array<CharSequence> {
-        val listItems: MutableList<String> = ArrayList()
-        listItems.add("Maciej")
-        listItems.add("Agata")
-        listItems.add("Juliusz")
-        val charSequenceItems =
-            listItems.toTypedArray<CharSequence>()
-        return charSequenceItems
-    }
     private fun setTasks() {
-        //val users =  AwsApi.GetUsers()
-        // save parameter
-        // }
-        tasksNames = GetDummyTasks()
+        Clog.log("Enter setTasks() with userID:$id ")
+        //user analise
+        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
+        val taskNameList: MutableList<String> = ArrayList()
+        for (taskId in user.taskIDs) {
+            val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId, user.ID, hash).get()
+            if (task.taskName != null )
+            {
+                Clog.log("task added to list of tasks " + task.toString())
+                tasks.add(task)
+                taskNameList.add(task.taskName)
+            }
+        }
+        tasksNames = taskNameList.toTypedArray<CharSequence>()
         checkedTasks = BooleanArray(tasksNames.size)
         initCheckedList(tasksNames.size,checkedTasks)
-
     }
     private fun initCheckedList(size: Int, list :BooleanArray )
     {
@@ -188,15 +205,7 @@ class AddGroupFragment : Fragment(){
             list[i] = false
         }
     }
-    private fun GetDummyTasks():  Array<CharSequence> {
-        val listItems: MutableList<String> = ArrayList()
-        listItems.add("Add engine")
-        listItems.add("Create prototype")
-        listItems.add("Refactor code")
-        val charSequenceItems =
-            listItems.toTypedArray<CharSequence>()
-        return charSequenceItems
-    }
+
 }
 
 

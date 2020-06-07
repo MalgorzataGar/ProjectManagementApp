@@ -3,8 +3,6 @@ package com.example.projectmanagementapp
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
@@ -18,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.projectmanagementapp.extensions.loadPreference
 import com.google.android.material.navigation.NavigationView
+import com.example.projectmanagementapp.extensions.Clog
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Clog.log("-------------- first log in main -------------------")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getSampleRESTRequest(){
-        Log.v("REST","Uruchomienie wezwania API")
+        Clog.log("firs log in main")
     }
     // TODO przechowywać hasha hasła i singleton id użytkownika
 }

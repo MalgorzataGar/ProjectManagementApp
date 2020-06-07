@@ -22,7 +22,11 @@
         android:id="@+id/nav_addtask"
         android:name="com.example.projectmanagementapp.ui.AddTask.AddTaskFragment"
         android:label="@string/menu_addtask"
-        tools:layout="@layout/fragment_addtask" />
+        tools:layout="@layout/fragment_addtask" >
+        <action
+            android:id="@+id/action_nav_addtask_to_nav_mytasks"
+            app:destination="@id/nav_mytasks" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_grouptasks"
@@ -49,6 +53,9 @@
         android:name="com.example.projectmanagementapp.ui.TaskView.TaskFragment"
         android:label = "@string/menu_task"
         tools:layout="@layout/fragment_task">
+        <action
+            android:id="@+id/action_nav_task_to_nav_mytasks"
+            app:destination="@id/nav_mytasks" />
     </fragment>
     <fragment
         android:id="@+id/nav_logout"

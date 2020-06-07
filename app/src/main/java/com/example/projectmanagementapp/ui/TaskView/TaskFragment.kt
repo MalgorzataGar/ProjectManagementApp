@@ -12,16 +12,20 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
+import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.loadPreference
 
 class TaskFragment : Fragment() {
 
     private lateinit var taskViewModel: TaskViewModel
+    var navController: NavController? = null
     private lateinit var root :View
     private lateinit var id: String
     private lateinit var hash: String
@@ -45,35 +49,52 @@ class TaskFragment : Fragment() {
             ViewModelProviders.of(this).get(TaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_task, container, false);
         val taskId = arguments?.getString("taskID")
-        id = loadPreference(this.context,"Id") as String
-        hash = loadPreference(this.context,"PasswordHash") as String
+       // id = loadPreference(this.context,"Id") as String
+        //hash = loadPreference(this.context,"PasswordHash") as String
+        id = "1" // todo user delete it
+        hash = "dasijioasdjijdsaijdsa" // todo user delete it
         initView(taskId)
         initButtons()
         return root
     }
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+    }
     private fun initButtons() {
         val stateButton: Button = root.findViewById(R.id.changeStateButton)
         val deleteButton: Button = root.findViewById(R.id.deleteButton)
-        stateButton.setOnClickListener {
-            ChangeTaskState()
+        if(task.executorsIDs.first() != id)
+        {
+            stateButton.visibility = View.GONE
+            deleteButton.visibility = View.GONE
         }
-        deleteButton.setOnClickListener {
-            DeleteTask()
+        else
+        {
+            stateButton.setOnClickListener {
+                ChangeTaskState()
+            }
+            deleteButton.setOnClickListener {
+                DeleteTask()
+            }
         }
+
     }
 
     private fun DeleteTask() {
-        //aws api delete task
+        AwsApisAsyncWrapper.deleteTaskAsync().execute(task.ID, id, hash).get()
+        //TODO: UPDATE EXECUTOR AND GROUP
+        navController?.navigateUp()
     }
 
     private fun ChangeTaskState() {
         val text = task.state
-        /*when (text) {
-            "todo" -> //aws api update task state
-            "inprogress" ->// aws api update task state
-            "done" -> //aws api close task
-        }*/
+        when (text) {
+            "new" -> task.state = "inprogress"
+            "inprogress" ->task.state = "done"
+        }
+        AwsApisAsyncWrapper.postOrUpdateTaskAsync().execute(Pair(Pair(task,true),Pair(id,hash))).get()
+        task = GetTaskByID(task.ID)
         setStateButtonText()
     }
 
@@ -86,6 +107,7 @@ class TaskFragment : Fragment() {
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
         val priorityTextView: TextView = root.findViewById(R.id.taskPriority)
         val stateTextView: TextView = root.findViewById(R.id.taskState)
+        val groupTextView: TextView = root.findViewById(R.id.taskGroup)
         taskViewModel.text.observe(viewLifecycleOwner, Observer {
             executorTextView.text = GetExecutorById(task.executorsIDs.first())?.getName()
             nameTextView.text = task.taskName
@@ -94,6 +116,7 @@ class TaskFragment : Fragment() {
             priorityTextView.text = task.priority
             stateTextView.text = task.state
             descriptionTextView.text = task.taskDescription
+            groupTextView.text = GetGroupByID(task.groupID)?.groupName
         })
         setStateButtonText()
     }
@@ -104,23 +127,30 @@ class TaskFragment : Fragment() {
         when (text) {
             "new" -> stateButton.text = getString(R.string.stateButtonStartProgress)
             "inprogress" -> stateButton.text = getString(R.string.stateButtonFinish)
-            "done" -> stateButton.text = getString(R.string.stateButtonClose)
+            "done" -> stateButton.visibility = View.GONE
         }
     }
 
     private fun GetExecutorById(executorID: String?): User? {
-        //return AwsApi.getUser(executorID)
-        return null
+        //TODO: get external user!!
+        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(executorID, hash).get()
+        return user
     }
 
     private fun GetCreatorById(creatorID: String?): User? {
-        //return AwsApi.getUser(creatorID)
-        return null
+        //TODO: get external user!!
+        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(creatorID, hash).get()
+        return user
     }
 
 
-    private fun GetTaskByID(id: String?): Task {
-        return AwsApisAsyncWrapper(context as Context).getTaskIDasync().execute(id).get()
+    private fun GetTaskByID(taskId: String?): Task {
+        val task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId, id, hash).get()
+        return task
+    }
+    private fun GetGroupByID(groupId: String?): Team {
+        val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupId, id, hash).get()
+        return team
     }
 
 }
