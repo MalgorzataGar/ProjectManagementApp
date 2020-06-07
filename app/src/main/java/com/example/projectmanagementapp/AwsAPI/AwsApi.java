@@ -303,15 +303,17 @@ public class AwsApi {
         }
     }
 
-    public static int updateUser(User user) throws JSONException, IOException {
+    public static int updateUser(User user,String ID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createUser";
         JsonObject json = new JsonObject();
         json.addProperty("userID",user.getID());
         json.addProperty("login",user.getLogin());
         json.addProperty("name",user.getName());
-        json.addProperty("passwordHash",user.getPasswordHash());
+        json.addProperty("passwordHash",user.getPasswordHash().toString());
         json.addProperty("taskIDs",user.getTaskIDs().toString());
         json.addProperty("groupIDs",user.getGroupIDs().toString());
+        json.addProperty("editorID",ID);
+        json.addProperty("editorHash",passwordHash);
         //System.out.println(json.toString());
         RequestBody body = RequestBody.create(JSON,json.toString());
         Request request = new Request.Builder()
