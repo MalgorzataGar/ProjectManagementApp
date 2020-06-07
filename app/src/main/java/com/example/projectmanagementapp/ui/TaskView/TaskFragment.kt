@@ -1,7 +1,7 @@
 package com.example.projectmanagementapp.ui.TaskView
 
-import android.content.Context
 import android.os.AsyncTask
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -49,10 +49,10 @@ class TaskFragment : Fragment() {
             ViewModelProviders.of(this).get(TaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_task, container, false);
         val taskId = arguments?.getString("taskID")
-       // id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // todo user delete it
-        hash = "dasijioasdjijdsaijdsa" // todo user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // todo user delete it
+        //hash = "dasijioasdjijdsaijdsa" // todo user delete it
         initView(taskId)
         initButtons()
         return root
@@ -91,7 +91,7 @@ class TaskFragment : Fragment() {
         }
         if (executor?.taskIDs != null && executor.taskIDs.contains(task.ID)) {
             executor.taskIDs.remove(task.ID)
-            AwsApisAsyncWrapper.UpdateUserAsync().execute(executor).get()
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(executor,Pair(id,hash))).get()
         }
         navController?.navigateUp()
     }

@@ -21,6 +21,7 @@ import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.OnItemClickListener
+import com.example.projectmanagementapp.extensions.loadPreference
 
 class MyTasksFragment : Fragment() {
 
@@ -48,10 +49,10 @@ class MyTasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onCreateComponent()
-        //id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // todo user delete it
-        hash = "dasijioasdjijdsaijdsa" // todo user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // todo user delete it
+        //hash = "dasijioasdjijdsaijdsa" // todo user delete it
     }
 
     private fun onCreateComponent() {

@@ -72,10 +72,10 @@ class GroupTasksFragment : Fragment() {
 
     private fun initView(){
         setUpAdapter()
-        //id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // TODO user delete it
-        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // TODO user delete it
+        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         groupList = arrayListOf<Team>()
 
         initGroups()
@@ -95,9 +95,13 @@ class GroupTasksFragment : Fragment() {
         for( groupid in user.groupIDs)
         {
             val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
+            if(team == null)
+            {
+                user.groupIDs.remove(groupid)
+                AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash)))
+            }
             if (team.groupName != null)
                 groupList.add(team)
-            // TODO if group is null (group deleted) - remove groupID from user data
         }
         Clog.log("groups: "+groupList.joinToString (" "))
     }
@@ -212,8 +216,14 @@ class GroupTasksFragment : Fragment() {
                     continue
                 }
             }
+            else
+            {
+                user.taskIDs.remove(taskId)
+                AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash)))
+            }
+
             Clog.log("task was not added to list - taskID: $taskId")
-            //TODO - delete id from groupTasks if task return null
+
         }
 
         adapter.addItems(tasksList)

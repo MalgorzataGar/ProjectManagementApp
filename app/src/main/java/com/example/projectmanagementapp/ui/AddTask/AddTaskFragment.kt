@@ -50,10 +50,10 @@ class AddTaskFragment : Fragment() {
         addTaskViewModel =
                 ViewModelProviders.of(this).get(AddTaskViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
-        //id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // TODO user delete it
-        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // TODO user delete it
+        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         initData()
         setGroups()
         setExecutors()
@@ -82,8 +82,7 @@ class AddTaskFragment : Fragment() {
         }
         for(memberId in memberIds)
         {
-            //TODO: GET EXTERNAL USER
-            var member = AwsApisAsyncWrapper.getUserAsync().execute(memberId, hash).get()
+            var member = AwsApisAsyncWrapper.getExternalUserAsync().execute(memberId,id,hash).get()
             if(member != null && member.name != null )
             {
                 usersList.add(member)
@@ -204,13 +203,24 @@ class AddTaskFragment : Fragment() {
         val formatedDate = sdf.format(cal.time)
         val taskID = id+"_" + formatedDate
         val priorityDropdown: Spinner = root.findViewById(R.id.taskPriority)
-        val executor: Spinner = root.findViewById(R.id.taskExecutor)
-        val group : Spinner = root.findViewById(R.id.taskGroup)
+        val executorSpinner: Spinner = root.findViewById(R.id.taskExecutor)
+        var executorId : MutableList<String>?
+        if(executorSpinner.selectedItem != null)
+        {
+             executorId = getExecutorId(executorSpinner.selectedItem.toString())
+        }
+        else executorId = getExecutorId("")
+        val groupSpinner : Spinner = root.findViewById(R.id.taskGroup)
+        var groupId : String
+        if(groupSpinner.selectedItem != null)
+        {
+            groupId = getGroupId(groupSpinner.selectedItem.toString())
+        }
+        else groupId = getGroupId("")
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
         val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else "" //todo check if cause db error
-        val task = Task(id, date, getExecutorId(executor.selectedItem.toString()),
-            getGroupId(group.selectedItem.toString()), taskID, priorityDropdown.selectedItem.toString(),
+        val task = Task(id, date, executorId,groupId, taskID, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Clog.log( "Task object was created: $task")
         updateDataBase(task)
@@ -229,7 +239,13 @@ class AddTaskFragment : Fragment() {
         }
         if (executor != null) {
             executor.taskIDs.add(task.ID)
-            AwsApisAsyncWrapper.UpdateUserAsync().execute(executor).get()
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(executor,Pair(id,hash))).get()
+        }
+        else if(task.executorsIDs.first() == id)
+        {
+            var user  = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
+            user.taskIDs.add(task.ID)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
         }
 
     }
@@ -247,6 +263,10 @@ class AddTaskFragment : Fragment() {
     private fun checkExecutor(): Boolean {
         val executorSpinner: Spinner = root.findViewById(R.id.taskExecutor)
         val groupSpinner : Spinner = root.findViewById(R.id.taskGroup)
+        if(executorSpinner.selectedItem == null)
+        {
+            return true
+        }
         val executorId = getExecutorId(executorSpinner.selectedItem.toString())?.first()
         val group = groupList.find{x -> x.groupName == groupSpinner.selectedItem.toString()}
         if(group?.usersIDs?.contains(executorId)!!)
@@ -257,9 +277,10 @@ class AddTaskFragment : Fragment() {
 
     private fun getExecutorId(executorName: String): MutableList<String>? {
         val list : MutableList<String> = ArrayList()
-        var id = usersList.find{ x-> x.name == executorName}?.ID
-        if(id != null)
-            list.add(id)
+        var executorId = usersList.find{ x-> x.name == executorName}?.ID
+        if(executorId!= null)
+            list.add(executorId)
+        else list.add(id)
         return list
     }
     private fun getGroupId(groupName: String): String {

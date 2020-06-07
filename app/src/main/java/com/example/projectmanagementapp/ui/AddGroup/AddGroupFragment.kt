@@ -46,10 +46,10 @@ class AddGroupFragment : Fragment(){
 
         addGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
-        //id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // TODO user delete it
-        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // TODO user delete it
+        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         initializeData()
         setButtonListeners()
         return root
@@ -137,11 +137,37 @@ class AddGroupFragment : Fragment(){
         var tasksIds = getSelectedTasksIds()
         var usersIds = getSelectedUsersIds()
         var newTeam = Team(id,nameText.text.toString(),groupIdText.text.toString(),tasksIds,usersIds)
-        AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash)))
-        //TODO: update users
-        //TODO: update this user because this is his group
+        updateUsers(usersIds,newTeam.ID)
+        updateTasks(tasksIds,newTeam.ID)
+        AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash))).get()
+       // updateUsers(usersIds,newTeam.ID)
+        //updateTasks(tasksIds,newTeam.ID)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
+    }
+
+    private fun updateTasks(tasksIds: ArrayList<String>, groupId: String?) {
+        for(taskId in tasksIds)
+        {
+            var task = AwsApisAsyncWrapper.getTaskIDasync().execute(taskId,id, hash).get()
+            task.groupID = groupId
+            AwsApisAsyncWrapper.postOrUpdateTaskAsync().execute(Pair(Pair(task,true),Pair(id,hash))).get()
+        }
+    }
+
+    private fun updateUsers(usersIds: ArrayList<String>,teamId : String) {
+        for(userId in usersIds)
+        {
+            var user = AwsApisAsyncWrapper.getExternalUserAsync().execute(userId,id, hash).get()
+            user.groupIDs.add(teamId)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
+        }
+        if(!usersIds.contains(id))
+        {
+            var user = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
+            user.groupIDs.add(teamId)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
+        }
     }
 
     private fun getSelectedTasksIds(): ArrayList<String> {

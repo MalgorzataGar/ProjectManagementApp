@@ -14,6 +14,7 @@ import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.Clog
+import com.example.projectmanagementapp.extensions.loadPreference
 
 class EditGroupFragment : Fragment(){
     private lateinit var editGroupViewModel: EditGroupViewModel
@@ -37,10 +38,10 @@ class EditGroupFragment : Fragment(){
         editGroupViewModel =
             ViewModelProviders.of(this).get(EditGroupViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_editgroup, container, false)
-        //id = loadPreference(this.context,"Id") as String
-        //hash = loadPreference(this.context,"PasswordHash") as String
-        id = "1" // TODO user delete it
-        hash = "dasijioasdjijdsaijdsa" // TODO user delete it
+        id = loadPreference(this.context,"Id") as String
+        hash = loadPreference(this.context,"PasswordHash") as String
+        //id = "1" // TODO user delete it
+        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
         setGroups()
@@ -189,12 +190,30 @@ class EditGroupFragment : Fragment(){
             Clog.log("Change team values to: $team")
             AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(team,true),Pair(id,hash)))
             Toast.makeText(root.context,"Updated",Toast.LENGTH_SHORT).show()
+            updateUsers(editedUsersIds,team.ID,team.adminID)
         } else{
             Toast.makeText(root.context,"Error",Toast.LENGTH_SHORT).show()
             Clog.log("Unknown error")
         }
-        //TODO: update team members
         ClearPage()
+    }
+    private fun updateUsers(usersIds: ArrayList<String>,teamId : String, adminId: String) {
+        for(userId in usersIds)
+        {
+            var user = AwsApisAsyncWrapper.getExternalUserAsync().execute(userId,id, hash).get()
+            if(user.groupIDs.contains(teamId))
+            {
+                user.groupIDs.remove(teamId)
+            }
+            else user.groupIDs.add(teamId)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
+        }
+        if(!usersIds.contains(adminId))
+        {
+            var user = AwsApisAsyncWrapper.getExternalUserAsync().execute(adminId,id, hash).get()
+            user.groupIDs.add(teamId)
+            AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
+        }
     }
 
     private fun getEditedUsersIds( newMembersIds : ArrayList<String>): ArrayList<String> {
@@ -246,12 +265,17 @@ class EditGroupFragment : Fragment(){
         for( groupid in user.groupIDs)
         {
             val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
+            if(team == null)
+            {
+                user.groupIDs.remove(groupid)
+                AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash)))
+            }
             if (team.groupName != null)
                 if(team.getAdminID()==id) {
                     groupList.add(team.groupName)
                     adminTeams.add(team)
                 }
-            // TODO if group is null (group deleted) - remove groupID from user data
+
         }
         Clog.log("groups: "+groupList.joinToString (" "))
         return groupList

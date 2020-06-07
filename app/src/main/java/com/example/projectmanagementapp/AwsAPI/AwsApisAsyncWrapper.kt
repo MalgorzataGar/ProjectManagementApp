@@ -182,12 +182,12 @@ class AwsApisAsyncWrapper (){
             Clog.log("REST", "Got task info from server")
         }
     }
-    class UpdateUserAsync: AsyncTask<User, Int, Void>() {
+    class UpdateUserAsync: AsyncTask<Pair<User,Pair<String,String>>, Int, Void>() {
 
         // Do the long-running work in here
-        override fun doInBackground(vararg arg: User): Void? {
+        override fun doInBackground(vararg arg:Pair<User,Pair<String,String>>): Void? {
             Clog.log("REST", "updateUser "+arg[0].toString())
-            AwsApi.updateUser(arg[0])
+            AwsApi.updateUser(arg[0].first,arg[0].second.first,arg[0].second.second)
             return null
         }
 

@@ -68,5 +68,4 @@ class MainActivity : AppCompatActivity() {
     fun getSampleRESTRequest(){
         Clog.log("firs log in main")
     }
-    // TODO przechowywać hasha hasła i singleton id użytkownika
 }
