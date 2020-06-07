@@ -76,18 +76,17 @@ class AwsApisAsyncWrapper (){
         }
 
     }
-    class postOrUpdateTaskAsync: AsyncTask<Pair< Pair<Task,Boolean>, Pair<String,String> >, Int, Void>() {
+    class postOrUpdateTaskAsync: AsyncTask<Pair< Pair<Task,Boolean>, Pair<String,String> >, Int, String>() {
         //Pair< Task, updateTask>, Pair<userID, hash>
 
         // Do the long-running work in here
-        override fun doInBackground(vararg arg: Pair< Pair<Task, Boolean>, Pair<String, String>>): Void? {
+        override fun doInBackground(vararg arg: Pair< Pair<Task, Boolean>, Pair<String, String>>): String {
             Clog.log("REST", "postTask "+arg[0].toString())
-            AwsApi.postOrUpdateTask(arg[0].first.first, arg[0].first.second,arg[0].second.first,arg[0].second.second)
-            return null
+           return  AwsApi.postOrUpdateTask(arg[0].first.first, arg[0].first.second,arg[0].second.first,arg[0].second.second)
         }
 
         // This is called when doInBackground() is finished
-        override fun onPostExecute(result: Void?) {
+        override fun onPostExecute(result: String) {
             //showNotification("Downloaded $result bytes")
             Clog.log("REST_postTask", "Sent task info from server")
         }
@@ -110,18 +109,18 @@ class AwsApisAsyncWrapper (){
 
     }
 
-    class postOrUpdateGroupAsync: AsyncTask<Pair< Pair<Team,Boolean>, Pair<String,String> >, Int, Void>() {
+    class postOrUpdateGroupAsync: AsyncTask<Pair< Pair<Team,Boolean>, Pair<String,String> >, Int, String>() {
         //Pair< Team, updateTeam>, Pair<userID, hash>
 
         // Do the long-running work in here
-        override fun doInBackground(vararg arg: Pair< Pair<Team, Boolean>, Pair<String, String>>): Void? {
+        override fun doInBackground(vararg arg: Pair< Pair<Team, Boolean>, Pair<String, String>>): String {
             Clog.log("REST", "postGroup "+arg[0].toString())
-            AwsApi.postOrUpdateGroup(arg[0].first.first, arg[0].first.second,arg[0].second.first,arg[0].second.second)
-            return null
+            return AwsApi.postOrUpdateGroup(arg[0].first.first, arg[0].first.second,arg[0].second.first,arg[0].second.second)
+
         }
 
         // This is called when doInBackground() is finished
-        override fun onPostExecute(result: Void?) {
+        override fun onPostExecute(result: String) {
             //showNotification("Downloaded $result bytes")
             Clog.log("REST_postGroup", "Sent group info to server")
         }

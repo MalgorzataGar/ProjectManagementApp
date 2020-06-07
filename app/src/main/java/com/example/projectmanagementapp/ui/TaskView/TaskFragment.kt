@@ -85,11 +85,11 @@ class TaskFragment : Fragment() {
         AwsApisAsyncWrapper.deleteTaskAsync().execute(task.ID, id, hash).get()
         val group = GetGroupByID(task.groupID)
         val executor = GetExecutorById(task.executorsIDs.first())
-        if (group.taskIDs != null && group.taskIDs.contains(task.ID)) {
+        if (group != null && group.taskIDs != null && group.taskIDs.contains(task.ID)) {
             group.taskIDs.remove(task.ID)
             AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(group,true), Pair(id,hash))).get()
         }
-        if (executor?.taskIDs != null && executor.taskIDs.contains(task.ID)) {
+        if (executor != null && executor?.taskIDs != null && executor.taskIDs.contains(task.ID)) {
             executor.taskIDs.remove(task.ID)
             AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(executor,Pair(id,hash))).get()
         }
@@ -104,6 +104,8 @@ class TaskFragment : Fragment() {
         }
         AwsApisAsyncWrapper.postOrUpdateTaskAsync().execute(Pair(Pair(task,true),Pair(id,hash))).get()
         task = GetTaskByID(task.ID)
+        val stateTextView: TextView = root.findViewById(R.id.taskState)
+        stateTextView.text = task.state
         setStateButtonText()
     }
 

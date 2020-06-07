@@ -104,7 +104,7 @@ class AddGroupFragment : Fragment(){
     private fun EditTasksList(){
         lateinit var dialogAlert:AlertDialog
         var builder: AlertDialog.Builder = AlertDialog.Builder(this.context)
-        builder.setTitle("Select members");
+        builder.setTitle("Select tasks");
         builder.setMultiChoiceItems(
             tasksNames,
             checkedTasks,
@@ -122,9 +122,7 @@ class AddGroupFragment : Fragment(){
     }
     private fun ClearPage() {
         var nameText : EditText = root.findViewById(R.id.nameEdit)
-        var groupIdText : EditText = root.findViewById(R.id.groupIDEdit)
         nameText.setText("")
-        groupIdText.setText("")
         selectedMembers.clear()
         selectedTasks.clear()
         initCheckedList(tasksNames.size,checkedTasks)
@@ -133,15 +131,13 @@ class AddGroupFragment : Fragment(){
 
     private fun SubmitUpdate() {
         var nameText : EditText = root.findViewById(R.id.nameEdit)
-        var groupIdText : EditText = root.findViewById(R.id.groupIDEdit)
         var tasksIds = getSelectedTasksIds()
         var usersIds = getSelectedUsersIds()
-        var newTeam = Team(id,nameText.text.toString(),groupIdText.text.toString(),tasksIds,usersIds)
-        updateUsers(usersIds,newTeam.ID)
-        updateTasks(tasksIds,newTeam.ID)
-        AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash))).get()
-       // updateUsers(usersIds,newTeam.ID)
-        //updateTasks(tasksIds,newTeam.ID)
+        var newTeam = Team(id,nameText.text.toString(),null,tasksIds,usersIds)
+        var groupId = AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(newTeam,false),Pair(id,hash))).get()
+        groupId = groupId.replace("\"","")
+        updateUsers(usersIds,groupId)
+        updateTasks(tasksIds,groupId)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
     }

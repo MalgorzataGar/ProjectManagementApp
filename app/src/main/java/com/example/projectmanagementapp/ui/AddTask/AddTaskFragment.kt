@@ -195,13 +195,9 @@ class AddTaskFragment : Fragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+
     private fun submitTask() {
         Clog.log("Submit Task was chosen, userID: $id, hash: $hash")
-        val cal = Calendar.getInstance()
-        val sdf = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
-        val formatedDate = sdf.format(cal.time)
-        val taskID = id+"_" + formatedDate
         val priorityDropdown: Spinner = root.findViewById(R.id.taskPriority)
         val executorSpinner: Spinner = root.findViewById(R.id.taskExecutor)
         var executorId : MutableList<String>?
@@ -220,7 +216,7 @@ class AddTaskFragment : Fragment() {
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
         val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else "" //todo check if cause db error
-        val task = Task(id, date, executorId,groupId, taskID, priorityDropdown.selectedItem.toString(),
+        val task = Task(id, date, executorId,groupId, null, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Clog.log( "Task object was created: $task")
         updateDataBase(task)
@@ -230,27 +226,27 @@ class AddTaskFragment : Fragment() {
     }
 
     private fun updateDataBase(task: Task) {
-        AwsApisAsyncWrapper.postOrUpdateTaskAsync().execute(Pair(Pair(task,false), Pair(id,hash))).get()
+        var taskid =  AwsApisAsyncWrapper.postOrUpdateTaskAsync().execute(Pair(Pair(task,false), Pair(id,hash))).get()
+        taskid = taskid.replace("\"","")
         val group = groupList.find{x -> x.ID == task.groupID}
         val executor = usersList.find{x -> x.ID == task.executorsIDs.first()}
         if (group != null) {
-            group.taskIDs.add(task.ID)
+            group.taskIDs.add(taskid)
             AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(group,true), Pair(id,hash))).get()
         }
         if (executor != null) {
-            executor.taskIDs.add(task.ID)
+            executor.taskIDs.add(taskid)
             AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(executor,Pair(id,hash))).get()
         }
         else if(task.executorsIDs.first() == id)
         {
             var user  = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
-            user.taskIDs.add(task.ID)
+            user.taskIDs.add(taskid)
             AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
         }
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun subimtTaskWrapper(){ // ensure task name is not null
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         if (nameTextView.text.toString()=="")

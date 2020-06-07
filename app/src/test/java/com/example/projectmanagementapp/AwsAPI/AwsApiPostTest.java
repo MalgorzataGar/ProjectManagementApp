@@ -34,8 +34,8 @@ public class AwsApiPostTest {
         exIDs.add("1");
         exIDs.add("2");
         Task task = new Task("1","12:06:2020",exIDs,"2","084824","major","abandoned","Android test update task","New name");
-        int result = AwsApi.postOrUpdateTask(task,true,"1","dasijioasdjijdsaijdsa");
-        assertEquals(200,result);
+        String result = AwsApi.postOrUpdateTask(task,false,"1","dasijioasdjijdsaijdsa");
+        assertEquals("200",result);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class AwsApiPostTest {
         ids.add("5");
         ids.add("3");
         Team team = new Team("2","Android test name","104134",ids,ids);
-        int result = AwsApi.postOrUpdateGroup(team,true,"3","dasijioasdjijdsaijdsa");
-        assertEquals(200,result);
+        String result = AwsApi.postOrUpdateGroup(team,true,"3","dasijioasdjijdsaijdsa");
+        assertEquals("200",result);
     }
 }

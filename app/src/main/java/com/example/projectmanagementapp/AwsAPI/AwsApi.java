@@ -58,6 +58,8 @@ public class AwsApi {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    private static String userID = "1"; //TODO replace with singleton
+    private static String passwordHash ="dasijioasdjijdsaijdsa"; //TODO replace with singleton
 
     private static OkHttpClient getHttpClient() {
         try {
@@ -346,8 +348,8 @@ public class AwsApi {
         }
     }
 
-    //public static void postOrUpdateTask(Task task, boolean updateTask) throws JSONException, IOException {
-    public static int postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
+    //public static void postOrUpdateTask(Task task, boolean updateTask) throws JSONException, IOException { //TODO
+    public static String postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -372,18 +374,21 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
-        Clog.log("REST_postTask","Response "+res.toString());
+        String bod = res.body().string();
+        Log.v("REST_postTask","Response "+res.toString());
         if (res!=null){
-            System.out.println(res.body().string());
-            return res.code();
+            System.out.println(bod);
+            JsonParser parser = new JsonParser();
+            JsonObject tasks = (JsonObject) parser.parse(bod);
+            return tasks.get("taskID").toString();
         }
         else{
-            return -1;
+            return "-1";
         }
     }
 
-    //public static void postOrUpdateGroup(Team group) throws JSONException, IOException {
-    public static int postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {
+    //public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
+    public static String postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createGroup";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
@@ -405,13 +410,15 @@ public class AwsApi {
                 .post(body)
                 .build();
         Response res = getHttpClient().newCall(request).execute();
+        String bod = res.body().string();
         if (res!=null){
-            Clog.log("REST_postTeam",res.toString());
-            System.out.println(res.body().string());
-            return res.code();
+            System.out.println(bod);
+            JsonParser parser = new JsonParser();
+            JsonObject groups = (JsonObject) parser.parse(bod);
+            return groups.get("groupID").toString();
         }
         else{
-            return -1;
+            return "-1";
         }
     }
 
