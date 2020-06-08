@@ -74,8 +74,6 @@ class GroupTasksFragment : Fragment() {
         setUpAdapter()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
-        //id = "1" // TODO user delete it
-        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         groupList = arrayListOf<Team>()
 
         initGroups()
