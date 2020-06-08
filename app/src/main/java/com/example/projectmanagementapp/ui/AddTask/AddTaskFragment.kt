@@ -114,7 +114,8 @@ class AddTaskFragment : Fragment() {
         val dpd =
             this.context?.let {
                 DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                   editDate.text = dayOfMonth.toString() + "-" + monthOfYear.toString() + "-" + year.toString()
+                    var monthText = monthOfYear+1
+                   editDate.text = dayOfMonth.toString() + "-" + monthText.toString() + "-" + year.toString()
                 }, year, month, day)
             }
         if (dpd != null) {
