@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">ProjectManagementApp</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_mytasks">My Tasks</string>
+    <string name="menu_grouptasks">Group Tasks</string>
+    <string name="menu_addtask">Add Task</string>
+    <string name="menu_addgroup">Add Group</string>
+    <string name="menu_editgroup">Edit Group</string>
+    <string name="menu_task">Task Details</string>
+    <string name="stateButtonStartProgress">Start progress</string>
+    <string name="stateButtonFinish">Finish</string>
+    <string name="stateButtonClose">Close</string>
+    <string name="Groupname">Group name</string>
+    <string name="Nameedit">name</string>
+    <string name="GroupID">Group ID</string>
+    <string name="groupID">groupID</string>
+    <string name="AdminID">Admin </string>
+    <string name="adminID">admin</string>
+    <string name="Tasks">Tasks</string>
+    <string name="tasksIDs">tasksIDs</string>
+    <string name="UsersRoles">Users &amp; roles</string>
+    <string name="IDsRoles">IDs &amp; roles (format: 1:member;)</string>
+    <string name="Gr">Groups:</string>
+    <string name="Us">Users:</string>
+    <string name="Ts">Tasks:</string>
+    <string name="menu_logout">Logout</string>
+
+    <string-array name="priorityList">
+        <item>minor</item>
+        <item>normal</item>
+        <item>major</item>
+    </string-array>
+    <string-array name="priorityWithEmptyList">
+        <item>All</item>
+        <item>minor</item>
+        <item>normal</item>
+        <item>major</item>
+    </string-array>
+    <string-array name="stateList">
+        <item>new</item>
+        <item>inprogress</item>
+        <item>done</item>
+    </string-array>
+
+    <string-array name="groupIDs">
+        <item>New group</item>
+    </string-array>
+</resources>
