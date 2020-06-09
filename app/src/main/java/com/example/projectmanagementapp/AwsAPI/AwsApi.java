@@ -115,6 +115,11 @@ public class AwsApi {
         Response res = getHttpClient().newCall(request).execute();
         if (res!=null) {
             String response = res.body().string();
+            Clog.log("REST","Login response: "+response);
+            if (response.equals("{\"message\":\"Internal Server Error\"}")){
+                Clog.log("REST", "return null in login rest - message Internal Server Error");
+                return "null";
+            }
             JsonParser parser = new JsonParser();
             JsonObject id = (JsonObject) parser.parse(response);
             String ret = id.get("ID").toString();
@@ -135,6 +140,11 @@ public class AwsApi {
             String body = response.body().string();
             Clog.log("REST_USER",body);
             if (body != null) {
+                if (body.equals("{\"message\":\"Internal Server Error\"}")){
+                    Clog.log("REST", "return null in getAllUsers rest - message Internal Server Error");
+                    return null;
+                }
+
                 //System.out.println(body);
                 JsonParser parser = new JsonParser();
                 JsonObject users = (JsonObject) parser.parse(body);
@@ -274,6 +284,11 @@ public class AwsApi {
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
+                if (body.equals("{\"message\":\"Internal Server Error\"}")){
+                    Clog.log("REST", "return null in getTask rest - message Internal Server Error");
+                    return null;
+                }
+
                Clog.log("REST_TASK","get task"+body);
                Task task = json2obj(body,Task.class);
                Clog.log("REST_TASK","Created task "+task.toString());

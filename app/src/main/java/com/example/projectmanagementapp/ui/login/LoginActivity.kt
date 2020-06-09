@@ -63,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
             loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
+
             }
             if (loginResult.success != null) {
                 Clog.log("preferences (id,passwordhash,name) was saved")
@@ -72,11 +73,12 @@ class LoginActivity : AppCompatActivity() {
                 savePreference(this.applicationContext,"PasswordHash",loginResult.success.passwordHash)
                 val i = Intent(this, MainActivity::class.java)
                 startActivity(i)
-            }
+            //}
             setResult(Activity.RESULT_OK)
 
+            Clog.log("LOGIN", "Proceed to close lragment ")
             //Complete and destroy login activity once successful
-            finish()
+            finish()}
         })
 
         username.afterTextChanged {
@@ -133,6 +135,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
+        Clog.log("LOGIN","Show login error message")
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 
