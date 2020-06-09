@@ -46,7 +46,6 @@ class LoginRepository() {
         }
         catch (e : Exception)
         {
-            //TODO handle exception
         }
         return null
     }

@@ -215,14 +215,13 @@ class AddTaskFragment : Fragment() {
         else groupId = getGroupId("")
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
-        val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else "" //todo check if cause db error
+        val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else ""
         val task = Task(id, date, executorId,groupId, null, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Clog.log( "Task object was created: $task")
         updateDataBase(task)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
-        //TODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)
     }
 
     private fun updateDataBase(task: Task) {

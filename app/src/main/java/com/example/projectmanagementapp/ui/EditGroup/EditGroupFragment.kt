@@ -40,8 +40,6 @@ class EditGroupFragment : Fragment(){
         root = inflater.inflate(R.layout.fragment_editgroup, container, false)
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
-        //id = "1" // TODO user delete it
-        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         editGroupViewModel.text.observe(viewLifecycleOwner, Observer {
         })
         setGroups()
