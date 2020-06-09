@@ -1,12 +1,9 @@
 package com.example.projectmanagementapp.ui.AddTask
 
 import android.app.DatePickerDialog
-import android.content.Context
-import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,18 +13,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.projectmanagementapp.AwsAPI.AwsApi
 import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper
-import com.example.projectmanagementapp.AwsAPI.AwsApisAsyncWrapper.postOrUpdateTaskAsync
 import com.example.projectmanagementapp.R
 import com.example.projectmanagementapp.data.model.Task
 import com.example.projectmanagementapp.data.model.Team
 import com.example.projectmanagementapp.data.model.User
 import com.example.projectmanagementapp.extensions.Clog
 import com.example.projectmanagementapp.extensions.loadPreference
-import java.time.LocalDateTime
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class AddTaskFragment : Fragment() {
@@ -40,6 +32,9 @@ class AddTaskFragment : Fragment() {
     private lateinit var hash: String
     private lateinit var groupList :ArrayList<Team>
     private lateinit var usersList :ArrayList<User>
+    private lateinit var user : User
+    private lateinit var activeGroup : Team
+    private var spinnerChoiceRestart = true
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -52,11 +47,10 @@ class AddTaskFragment : Fragment() {
         root = inflater.inflate(R.layout.fragment_addtask, container, false)
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
-        //id = "1" // TODO user delete it
-        //hash = "dasijioasdjijdsaijdsa" // TODO user delete it
         initData()
         setGroups()
-        setExecutors()
+        //setExecutors() // this line is executed by spinner onItemSelected
+        setGroupSpinnerListener()
         setButtonListeners()
         setDatePicker()
 
@@ -64,31 +58,17 @@ class AddTaskFragment : Fragment() {
     }
 
     private fun initData() {
-        val user: User = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
+        Clog.log("Entered into initData")
+        user = AwsApisAsyncWrapper.getUserAsync().execute(id, hash).get()
         groupList = ArrayList<Team>()
         usersList = ArrayList<User>()
-        var memberIds = ArrayList<String>()
         for(groupid in user.groupIDs)
         {
             val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupid,user.id,hash).get()
-            if (team!= null && team.groupName != null) {
+            if (team?.groupName != null) {
                 groupList.add(team)
-                for(id in team.usersIDs)
-                {
-                    if(!memberIds.contains(id))
-                        memberIds.add(id)
-                }
             }
         }
-        for(memberId in memberIds)
-        {
-            var member = AwsApisAsyncWrapper.getExternalUserAsync().execute(memberId,id,hash).get()
-            if(member != null && member.name != null )
-            {
-                usersList.add(member)
-            }
-        }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,12 +131,30 @@ class AddTaskFragment : Fragment() {
     }
 
      private fun GetUserNames(): MutableList<String> {
+         Clog.log("I am adding new users")
          val list : MutableList<String> = ArrayList()
-         for(user in usersList)
-         {
-             if(user.name != null)
-                list.add(user.name)
+         usersList = ArrayList()
+
+         var memberIds = ArrayList<String>()
+         val groupSpinner : Spinner = root.findViewById(R.id.taskGroup)
+         var groupId : String
+         if(groupSpinner.selectedItem == null)
+             return list
+
+         groupId = getGroupId(groupSpinner.selectedItem.toString())
+         val team = AwsApisAsyncWrapper.getTeamAsync().execute(groupId,user.id,hash).get()
+         if (team!= null && team.groupName != null) {
+             for(memberId in team.usersIDs) {
+                 var member =
+                     AwsApisAsyncWrapper.getExternalUserAsync().execute(memberId, id, hash).get()
+                 if (member != null && member.name != null) {
+                     usersList.add(member)
+                     list.add(member.name)
+                 }
+
+             }
          }
+         Clog.log("New users list created: "+list.joinToString { " "})
          return list
     }
 
@@ -170,6 +168,7 @@ class AddTaskFragment : Fragment() {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         groups.setAdapter(dataAdapter)
 
+        spinnerChoiceRestart = true
     }
      private fun GetGroupNames(): MutableList<String> {
          val list : MutableList<String> = ArrayList()
@@ -216,14 +215,13 @@ class AddTaskFragment : Fragment() {
         else groupId = getGroupId("")
         val nameTextView: TextView = root.findViewById(R.id.taskName)
         val descriptionTextView: TextView = root.findViewById(R.id.taskDescription)
-        val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else "" //todo check if cause db error
+        val date = if (editDate.text.toString()!="Set deadline")  editDate.text.toString() else ""
         val task = Task(id, date, executorId,groupId, null, priorityDropdown.selectedItem.toString(),
             "new",descriptionTextView.text.toString(),nameTextView.text.toString())
         Clog.log( "Task object was created: $task")
         updateDataBase(task)
         Toast.makeText(root.context,"Saved",Toast.LENGTH_SHORT).show()
         ClearPage()
-        //TODO przy powrocie do ekranu tasków powinno wczytywać z pamięci, a nie ładować od nowa (tutaj trzeba będzie pobrać id taska z odpowiedzi serwera i zapisać w tasku)
     }
 
     private fun updateDataBase(task: Task) {
@@ -285,6 +283,25 @@ class AddTaskFragment : Fragment() {
         if(id != null)
             return id
         return ""
+    }
+
+    private fun setGroupSpinnerListener(){
+        val groups: Spinner = root.findViewById(R.id.taskGroup)
+        groups.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                Clog.log("CUSTOM_SPINNER", "item in group spinner selected")
+                setExecutors()
+            }
+
+        })
     }
 
 

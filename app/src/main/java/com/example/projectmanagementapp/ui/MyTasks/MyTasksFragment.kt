@@ -51,8 +51,6 @@ class MyTasksFragment : Fragment() {
         onCreateComponent()
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
-        //id = "1" // todo user delete it
-        //hash = "dasijioasdjijdsaijdsa" // todo user delete it
     }
 
     private fun onCreateComponent() {
@@ -72,7 +70,6 @@ class MyTasksFragment : Fragment() {
     private fun initView() {
         setUpAdapter()
         initializeRecyclerView()
-        //TODO add loading screen (eg. spining circle) - to long time to load all tasks
         getTaskList("All")
         setAddTaskButton()
         setFilterListener()

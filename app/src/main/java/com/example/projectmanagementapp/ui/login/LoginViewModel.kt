@@ -8,6 +8,7 @@ import com.example.projectmanagementapp.data.LoginRepository
 import com.example.projectmanagementapp.data.Result
 
 import com.example.projectmanagementapp.R
+import com.example.projectmanagementapp.extensions.Clog
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -26,6 +27,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                 passwordHash = result.passwordHash))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
+            Clog.log("Login","Login failed")
         }
     }
 

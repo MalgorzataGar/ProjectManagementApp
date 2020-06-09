@@ -51,8 +51,7 @@ class TaskFragment : Fragment() {
         val taskId = arguments?.getString("taskID")
         id = loadPreference(this.context,"Id") as String
         hash = loadPreference(this.context,"PasswordHash") as String
-        //id = "1" // todo user delete it
-        //hash = "dasijioasdjijdsaijdsa" // todo user delete it
+
         initView(taskId)
         initButtons()
         return root

@@ -45,7 +45,7 @@ import okio.BufferedSink;
 
 
 public class AwsApi {
-    private static <T> T returnObject(String stringObj) {//TODO zastąpić każde wywołanie z json2obj
+    private static <T> T returnObject(String stringObj) {
         Gson gson = new Gson(); // Or use new GsonBuilder().create();
         Type type = new TypeToken<T>() {
         }.getType();
@@ -57,9 +57,6 @@ public class AwsApi {
     }
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-    private static String userID = "1"; //TODO replace with singleton
-    private static String passwordHash ="dasijioasdjijdsaijdsa"; //TODO replace with singleton
 
     private static OkHttpClient getHttpClient() {
         try {
@@ -115,6 +112,11 @@ public class AwsApi {
         Response res = getHttpClient().newCall(request).execute();
         if (res!=null) {
             String response = res.body().string();
+            Clog.log("REST","Login response: "+response);
+            if (response.equals("{\"message\":\"Internal Server Error\"}")){
+                Clog.log("REST", "return null in login rest - message Internal Server Error");
+                return "null";
+            }
             JsonParser parser = new JsonParser();
             JsonObject id = (JsonObject) parser.parse(response);
             String ret = id.get("ID").toString();
@@ -135,6 +137,11 @@ public class AwsApi {
             String body = response.body().string();
             Clog.log("REST_USER",body);
             if (body != null) {
+                if (body.equals("{\"message\":\"Internal Server Error\"}")){
+                    Clog.log("REST", "return null in getAllUsers rest - message Internal Server Error");
+                    return null;
+                }
+
                 //System.out.println(body);
                 JsonParser parser = new JsonParser();
                 JsonObject users = (JsonObject) parser.parse(body);
@@ -274,6 +281,11 @@ public class AwsApi {
             Response response = getHttpClient().newCall(request).execute();
             String body = response.body().string();
             if (body != null) {
+                if (body.equals("{\"message\":\"Internal Server Error\"}")){
+                    Clog.log("REST", "return null in getTask rest - message Internal Server Error");
+                    return null;
+                }
+
                Clog.log("REST_TASK","get task"+body);
                Task task = json2obj(body,Task.class);
                Clog.log("REST_TASK","Created task "+task.toString());
@@ -348,15 +360,14 @@ public class AwsApi {
         }
     }
 
-    //public static void postOrUpdateTask(Task task, boolean updateTask) throws JSONException, IOException { //TODO
-    public static String postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
+    public static String postOrUpdateTask(Task task, boolean updateTask, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createTask";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
         json.addProperty("passwordHash",passwordHash);
         json.addProperty("creatorID",task.getCreatorID());
         json.addProperty("deadline",task.getDeadline());
-        json.addProperty("executorsIDs", task.getExecutorsIDs().toString()); // TODO in case of multiple executors change this call; DONE in cloud!
+        json.addProperty("executorsIDs", task.getExecutorsIDs().toString());
         //json.add("executorsIDs",json.getAsJsonArray(task.getExecutorsIDs().toString()));
         json.addProperty("groupID",task.getGroupID());
         if(updateTask) {
@@ -387,8 +398,7 @@ public class AwsApi {
         }
     }
 
-    //public static void postOrUpdateGroup(Team group) throws JSONException, IOException { //TODO
-    public static String postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {  //TODO change when itroduce singleton
+    public static String postOrUpdateGroup(Team group, boolean updateGroup, String userID, String passwordHash) throws JSONException, IOException {
         String url = "https://qd9c42cc50.execute-api.eu-west-2.amazonaws.com/createGroup";
         JsonObject json = new JsonObject();
         json.addProperty("userID",userID);
