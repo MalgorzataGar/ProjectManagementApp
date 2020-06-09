@@ -99,7 +99,6 @@ class EditGroupFragment : Fragment(){
             if(user.key == selectedGroup?.adminID)
             {
                 adminId.setText(user.value)
-                break
             }
             var index =  usersNames.indexOf(user.value)
             if(selectedGroup?.usersIDs?.contains(user.key)!!)
@@ -180,6 +179,9 @@ class EditGroupFragment : Fragment(){
         }
 
         var team = adminTeams.find{x-> x.groupName == selectedTeamName}
+        var adminIdChanged = false
+        if(team?.adminID != adminId)
+            adminIdChanged = true
         Clog.log("selected team: $team")
         if (team != null) {
             team.groupName = nameText.text.toString()
@@ -188,16 +190,16 @@ class EditGroupFragment : Fragment(){
             if(!team.usersIDs.contains(team.adminID))
                 team.usersIDs.add(team.adminID)
             Clog.log("Change team values to: $team")
-            AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(team,true),Pair(id,hash)))
+            AwsApisAsyncWrapper.postOrUpdateGroupAsync().execute(Pair(Pair(team,true),Pair(id,hash))).get()
             Toast.makeText(root.context,"Updated",Toast.LENGTH_SHORT).show()
-            updateUsers(editedUsersIds,team.ID,team.adminID)
+            updateUsers(editedUsersIds,team.ID,team.adminID, adminIdChanged)
         } else{
             Toast.makeText(root.context,"Error",Toast.LENGTH_SHORT).show()
             Clog.log("Unknown error")
         }
         ClearPage()
     }
-    private fun updateUsers(usersIds: ArrayList<String>,teamId : String, adminId: String) {
+    private fun updateUsers(usersIds: ArrayList<String>,teamId : String, adminId: String, adminIdChanged: Boolean) {
         for(userId in usersIds)
         {
             var user = AwsApisAsyncWrapper.getExternalUserAsync().execute(userId,id, hash).get()
@@ -208,7 +210,7 @@ class EditGroupFragment : Fragment(){
             else user.groupIDs.add(teamId)
             AwsApisAsyncWrapper.UpdateUserAsync().execute(Pair(user,Pair(id,hash))).get()
         }
-        if(!usersIds.contains(adminId))
+        if(adminIdChanged)
         {
             var user = AwsApisAsyncWrapper.getExternalUserAsync().execute(adminId,id, hash).get()
             user.groupIDs.add(teamId)
@@ -238,14 +240,19 @@ class EditGroupFragment : Fragment(){
 
     private fun getSelectedUsersIds(): ArrayList<String> {
         var usersIds = ArrayList<String>()
-        for(memberName in selectedMembers.iterator())
+        for(i in 0 until checkedMembers.size)
         {
-            for(user in users)
+            if(checkedMembers[i])
             {
-                if(user.value == memberName)
-                    usersIds.add(user.key)
+                var userName = usersNames[i]
+                for(user in users)
+                {
+                    if(user.value == userName)
+                        usersIds.add(user.key)
+                }
             }
         }
+
         return usersIds
     }
     private fun setMembers() {

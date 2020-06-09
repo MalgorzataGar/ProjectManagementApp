@@ -182,7 +182,7 @@ class AddGroupFragment : Fragment(){
         {
             for(user in users)
             {
-                if(user.value == memberName)
+                if(user.value == memberName && !usersIds.contains(user.key))
                     usersIds.add(user.key)
             }
         }

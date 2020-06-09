@@ -67,11 +67,11 @@
 
 
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/recyclerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/applyLayout">
@@ -83,6 +83,4 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/task_item" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

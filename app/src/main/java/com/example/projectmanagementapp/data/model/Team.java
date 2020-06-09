@@ -37,7 +37,8 @@ public class Team {
         this.groupName = groupName;
         this.ID = ID;
         this.taskIDs = taskIDs;
-        usersIDs.add(adminID);
+        if(!usersIDs.contains(adminID))
+            usersIDs.add(adminID);
         this.usersIDs = usersIDs;
     }
     public Team(String adminID, String groupName, String ID, List<String> taskIDs) {
